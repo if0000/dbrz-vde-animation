@@ -9,6 +9,7 @@
 //
 //  This is the encoder model. This is a simplified demonstrative implementation, not for production use! If you need a production ready algorithm contact us.
 //  This module is responsible to encode the input character stream and depending on the settings provides insight into the current dictionary state.
+//  This implementation allows multiple occurence of that entries which are the result of virtual composition.
 //  The environment must be able to handle such circumstances, when the input is longer than the possible longest string, solution: chunking the input, next to the preservation of the already built dictionary.
 //
 
@@ -26,6 +27,8 @@ class dbrzEncoderVDE {
     this.virtualMode = false;
 
     this.string = "";
+    this.progressCounter = 0;
+
     this.dictionary = [];
     this.dictionaryAux = new Map();
 
@@ -49,28 +52,28 @@ class dbrzEncoderVDE {
     let subsEntryUnderInvestigation;
     let j = 0;
 
-    for(let i = 0; i < this.string.length; i++) {
+    for(this.progressCounter = 0; this.progressCounter < this.string.length; this.progressCounter++) {
 
       // Searching for the longest fit in between the primary entries - just like the legacy LZW works, built incrementally to be able decode the encoded input.
       if(!this.virtualMode) {
 
-        if (this.checkPrimaryEntryMatch(this.temporaryEntry + this.string.charAt(i))) {
+        if (this.checkPrimaryEntryMatch(this.temporaryEntry + this.string.charAt(this.progressCounter))) {
 
-          this.temporaryEntry = this.temporaryEntry + this.string.charAt(i);
+          this.temporaryEntry = this.temporaryEntry + this.string.charAt(this.progressCounter);
 
           //#FIXME
-          this.monitorFunction("logLine: 59", i);
+          this.monitorFunction("logLine: 59");
 
         } else {
 
           //#FIXME
-          this.monitorFunction("logLine: 63", i);
+          this.monitorFunction("logLine: 63");
           this.longestMatchingEntry = this.temporaryEntry;
           this.positonMatchPointer = this.dictionaryAux.get(this.longestMatchingEntry);
-          this.temporaryEntry = this.string.charAt(i);
+          this.temporaryEntry = this.string.charAt(this.progressCounter);
 
           //#FIXME
-          this.monitorFunction("logLine: 67", i);
+          this.monitorFunction("logLine: 67");
 
           // Here we can decide if we should start the virtual word search
           // or we are still in the domain of static part.
@@ -85,7 +88,7 @@ class dbrzEncoderVDE {
             this.encodedId = this.positonMatchPointer;
 
             //#FIXME
-            this.monitorFunction("logLine: 79", i);
+            this.monitorFunction("logLine: 79");
 
           } else {
 
@@ -107,7 +110,7 @@ class dbrzEncoderVDE {
 
             subsEntryUnderInvestigation = this.dictionary[(this.positonMatchPointer + this.distance)];
 
-            i = i - 1;
+            this.progressCounter = this.progressCounter - 1;
             this.temporaryEntry = "";
 
           }
@@ -117,12 +120,12 @@ class dbrzEncoderVDE {
             //#FIXME
             console.log('subsEntryUnderInvestigation: ' + subsEntryUnderInvestigation);
             
-            this.temporaryEntry = this.temporaryEntry + this.string.charAt(i);
+            this.temporaryEntry = this.temporaryEntry + this.string.charAt(this.progressCounter);
             // Match the next character
-            if (subsEntryUnderInvestigation.charAt(j) == this.string.charAt(i)) {
+            if (subsEntryUnderInvestigation.charAt(j) == this.string.charAt(this.progressCounter)) {
 
               //#FIXME
-              this.monitorFunction("logLine: 114", i);
+              this.monitorFunction("logLine: 114");
 
               j = j + 1;
 
@@ -138,13 +141,13 @@ class dbrzEncoderVDE {
               this.calculateVirtualIndex();
 
               //#FIXME
-              this.monitorFunction("logLine: 128", i);
+              this.monitorFunction("logLine: 128");
 
               this.longestMatchingEntry = "";
-              this.temporaryEntry = this.string.charAt(i);
+              this.temporaryEntry = this.string.charAt(this.progressCounter);
               subsEntryUnderInvestigation = undefined;
 
-              i = i - j + 1;
+              this.progressCounter = this.progressCounter - j + 1;
 
               this.distance = 0;
               this.virtualMode = false;
@@ -155,24 +158,24 @@ class dbrzEncoderVDE {
           // Check the next subsequent primary entry.
           } else {
 
-            this.monitorFunction("logLine: 144", i);
+            this.monitorFunction("logLine: 144");
             this.longestMatchingEntry = this.longestMatchingEntry + this.temporaryEntry;
-            this.temporaryEntry = this.string.charAt(i);
+            this.temporaryEntry = this.string.charAt(this.progressCounter);
             j = 1;
             this.distance = this.distance + 1;
             subsEntryUnderInvestigation = undefined;
 
             //#FIXME
-            this.monitorFunction("logLine: 150", i);
+            this.monitorFunction("logLine: 150");
 
           }
 
         // No more subsequent primary entries to check
         } else {
 
-          i = i - j;
+          this.progressCounter = this.progressCounter - j;
 
-          this.longestMatchingEntry = this.longestMatchingEntry + this.string.charAt((i));
+          this.longestMatchingEntry = this.longestMatchingEntry + this.string.charAt((this.progressCounter));
           let nextEntryPos = this.dictionary.length;
           this.dictionary[nextEntryPos] = this.longestMatchingEntry;
           this.dictionaryAux.set(this.longestMatchingEntry, nextEntryPos);
@@ -180,10 +183,10 @@ class dbrzEncoderVDE {
           this.calculateVirtualIndex();
 
           //#FIXME
-          this.monitorFunction("logLine: 164", i);
+          this.monitorFunction("logLine: 164");
           
           this.longestMatchingEntry = "";
-          this.temporaryEntry = this.string.charAt(i);
+          this.temporaryEntry = this.string.charAt(this.progressCounter);
           subsEntryUnderInvestigation = undefined;
 
           this.distance = 0;
@@ -195,10 +198,10 @@ class dbrzEncoderVDE {
   }
 
   //#NOTE - 20231028: Transform it to consume json configuration instead
-  monitorFunction(remark, counter) {
+  monitorFunction(remark) {
     console.log('                                  ' + remark);
-    console.log('counter i: ' + counter);
-    console.log('input progress: ' + this.string.slice(0,(counter + 1)));
+    console.log('progressCounter: ' + this.progressCounter);
+    console.log('input progress: ' + this.string.slice(0,(this.progressCounter + 1)));
     console.log('temporaryEntry: ' + this.temporaryEntry);
     console.log('longestMatchingEntry: ' + this.longestMatchingEntry);
     console.log('positonMatchPointer: ' + this.positonMatchPointer);
@@ -252,7 +255,8 @@ class dbrzEncoderVDE {
 
 const dbrzEVDE = new dbrzEncoderVDE();
 dbrzEVDE.initDictionary("");
-dbrzEVDE.setInputString("text to be encoded text to be encoded");
+dbrzEVDE.setInputString("text to be encoded text to be encoded text to be encoded text to be encoded");
+//dbrzEVDE.setInputString("text to be encoded text to be encoded");
 //dbrzEVDE.setInputString("texttexttexttexttexttexttexttexttexttexttexttext");
 //dbrzEVDE.setInputString("text to be encoded");
 dbrzEVDE.encode();
