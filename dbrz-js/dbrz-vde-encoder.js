@@ -61,19 +61,17 @@ class dbrzEncoderVDE {
 
           this.temporaryEntry = this.temporaryEntry + this.string.charAt(this.progressCounter);
 
-          //#FIXME
-          this.monitorFunction("logLine: 59");
+          this.monitorFunction("01 - Primary entry match.");
 
         } else {
 
-          //#FIXME
-          this.monitorFunction("logLine: 63");
+          this.monitorFunction("02 - One character longer than the longest primary entry.");
+
           this.longestMatchingEntry = this.temporaryEntry;
           this.positonMatchPointer = this.dictionaryAux.get(this.longestMatchingEntry);
           this.temporaryEntry = this.string.charAt(this.progressCounter);
 
-          //#FIXME
-          this.monitorFunction("logLine: 67");
+          this.monitorFunction("03 - Before decide if the domain is still the static part of the dictionary or the dynamic one.");
 
           // Here we can decide if we should start the virtual word search
           // or we are still in the domain of static part.
@@ -87,8 +85,7 @@ class dbrzEncoderVDE {
 
             this.encodedId = this.positonMatchPointer;
 
-            //#FIXME
-            this.monitorFunction("logLine: 79");
+            this.monitorFunction("04 - Static part: two letters long word is written into the dictionary.");
 
           } else {
 
@@ -124,8 +121,7 @@ class dbrzEncoderVDE {
             // Match the next character
             if (subsEntryUnderInvestigation.charAt(j) == this.string.charAt(this.progressCounter)) {
 
-              //#FIXME
-              this.monitorFunction("logLine: 114");
+              this.monitorFunction("05 - Character match during the examination of chaining of subsequent primary words.");
 
               j = j + 1;
 
@@ -140,8 +136,7 @@ class dbrzEncoderVDE {
 
               this.calculateVirtualIndex();
 
-              //#FIXME
-              this.monitorFunction("logLine: 128");
+              this.monitorFunction("06 - No more character match during virtual word composition. Index issue and dictionary update.");
 
               this.longestMatchingEntry = "";
               this.temporaryEntry = this.string.charAt(this.progressCounter);
@@ -158,22 +153,22 @@ class dbrzEncoderVDE {
           // Check the next subsequent primary entry.
           } else {
 
-            this.monitorFunction("logLine: 144");
+            this.monitorFunction("07 - End of a subsequent word with full match. Setup the check for the next one.");
+
             this.longestMatchingEntry = this.longestMatchingEntry + this.temporaryEntry;
             this.temporaryEntry = this.string.charAt(this.progressCounter);
             j = 1;
             this.distance = this.distance + 1;
             subsEntryUnderInvestigation = undefined;
 
-            //#FIXME
-            this.monitorFunction("logLine: 150");
+            this.monitorFunction("08 - State after setup.");
 
           }
 
         // No more subsequent primary entries to check
         } else {
 
-          this.progressCounter = this.progressCounter - j;
+          this.progressCounter = (this.progressCounter - j);
 
           this.longestMatchingEntry = this.longestMatchingEntry + this.string.charAt((this.progressCounter));
           let nextEntryPos = this.dictionary.length;
@@ -182,8 +177,7 @@ class dbrzEncoderVDE {
 
           this.calculateVirtualIndex();
 
-          //#FIXME
-          this.monitorFunction("logLine: 164");
+          this.monitorFunction("09 - No more possibility to chaining, since no more primary entries in the dictionary.");
           
           this.longestMatchingEntry = "";
           this.temporaryEntry = this.string.charAt(this.progressCounter);
@@ -192,6 +186,29 @@ class dbrzEncoderVDE {
           this.distance = 0;
           this.virtualMode = false;
 
+        }
+      }
+
+      // End of the input string: the internal states has to be examined for proper handling.
+      if(this.progressCounter == (this.string.length - 1)) {
+        if(this.longestMatchingEntry != "") {
+          this.progressCounter = (this.progressCounter - j);
+
+          this.longestMatchingEntry = this.longestMatchingEntry + this.string.charAt((this.progressCounter));
+          let nextEntryPos = this.dictionary.length;
+          this.dictionary[nextEntryPos] = this.longestMatchingEntry;
+          this.dictionaryAux.set(this.longestMatchingEntry, nextEntryPos);
+
+          this.calculateVirtualIndex();
+
+          this.monitorFunction("10 - End of string but the state variables are still not empty.");
+          
+          this.longestMatchingEntry = "";
+          this.temporaryEntry = this.string.charAt(this.progressCounter);
+          subsEntryUnderInvestigation = undefined;
+
+          this.distance = 0;
+          this.virtualMode = false;
         }
       }
     }
@@ -255,8 +272,8 @@ class dbrzEncoderVDE {
 
 const dbrzEVDE = new dbrzEncoderVDE();
 dbrzEVDE.initDictionary("");
-dbrzEVDE.setInputString("text to be encoded text to be encoded text to be encoded text to be encoded");
-//dbrzEVDE.setInputString("text to be encoded text to be encoded");
+//dbrzEVDE.setInputString("text to be encoded text to be encoded text to be encoded text to be encoded");
+dbrzEVDE.setInputString("text to be encoded text to be encoded");
 //dbrzEVDE.setInputString("texttexttexttexttexttexttexttexttexttexttexttext");
 //dbrzEVDE.setInputString("text to be encoded");
 dbrzEVDE.encode();
