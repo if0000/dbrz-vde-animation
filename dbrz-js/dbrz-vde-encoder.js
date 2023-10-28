@@ -28,6 +28,9 @@ class dbrzEncoderVDE {
     this.string = "";
     this.dictionary = [];
     this.dictionaryAux = new Map();
+
+    this.relativeDist = -1;
+    this.encodedId = -1;
     
   }
 
@@ -56,18 +59,18 @@ class dbrzEncoderVDE {
           this.temporaryEntry = this.temporaryEntry + this.string.charAt(i);
 
           //#FIXME
-          this.logFunction(59, i);
+          this.monitorFunction("logLine: 59", i);
 
         } else {
 
           //#FIXME
-          this.logFunction(63, i);
+          this.monitorFunction("logLine: 63", i);
           this.longestMatchingEntry = this.temporaryEntry;
           this.positonMatchPointer = this.dictionaryAux.get(this.longestMatchingEntry);
           this.temporaryEntry = this.string.charAt(i);
 
           //#FIXME
-          this.logFunction(67, i);
+          this.monitorFunction("logLine: 67", i);
 
           // Here we can decide if we should start the virtual word search
           // or we are still in the domain of static part.
@@ -79,8 +82,10 @@ class dbrzEncoderVDE {
             this.dictionary[nextEntryPos] = this.longestMatchingEntry;
             this.dictionaryAux.set(this.longestMatchingEntry, nextEntryPos);
 
+            this.encodedId = this.positonMatchPointer;
+
             //#FIXME
-            this.logFunction(79, i);
+            this.monitorFunction("logLine: 79", i);
 
           } else {
 
@@ -117,7 +122,7 @@ class dbrzEncoderVDE {
             if (subsEntryUnderInvestigation.charAt(j) == this.string.charAt(i)) {
 
               //#FIXME
-              this.logFunction(114, i);
+              this.monitorFunction("logLine: 114", i);
 
               j = j + 1;
 
@@ -130,8 +135,10 @@ class dbrzEncoderVDE {
               this.dictionary[nextEntryPos] = this.longestMatchingEntry;
               this.dictionaryAux.set(this.longestMatchingEntry, nextEntryPos);
 
+              this.calculateVirtualIndex();
+
               //#FIXME
-              this.logFunction(128, i);
+              this.monitorFunction("logLine: 128", i);
 
               this.longestMatchingEntry = "";
               this.temporaryEntry = this.string.charAt(i);
@@ -148,7 +155,7 @@ class dbrzEncoderVDE {
           // Check the next subsequent primary entry.
           } else {
 
-            this.logFunction(144, i);
+            this.monitorFunction("logLine: 144", i);
             this.longestMatchingEntry = this.longestMatchingEntry + this.temporaryEntry;
             this.temporaryEntry = this.string.charAt(i);
             j = 1;
@@ -156,7 +163,7 @@ class dbrzEncoderVDE {
             subsEntryUnderInvestigation = undefined;
 
             //#FIXME
-            this.logFunction(150, i);
+            this.monitorFunction("logLine: 150", i);
 
           }
 
@@ -169,8 +176,11 @@ class dbrzEncoderVDE {
           let nextEntryPos = this.dictionary.length;
           this.dictionary[nextEntryPos] = this.longestMatchingEntry;
           this.dictionaryAux.set(this.longestMatchingEntry, nextEntryPos);
+
+          this.calculateVirtualIndex();
+
           //#FIXME
-          this.logFunction(164, i);
+          this.monitorFunction("logLine: 164", i);
           
           this.longestMatchingEntry = "";
           this.temporaryEntry = this.string.charAt(i);
@@ -184,14 +194,16 @@ class dbrzEncoderVDE {
     }
   }
 
-  logFunction(position, counter) {
-    console.log('                                  logline: ' + position);
-    console.log('i: ' + counter);
-    console.log('String progress: ' + this.string.slice(0,(counter + 1)));
-    console.log('this.temporaryEntry: ' + this.temporaryEntry);
-    console.log('this.longestMatchingEntry: ' + this.longestMatchingEntry);
-    console.log('this.positonMatchPointer: ' + this.positonMatchPointer);
-    console.log('Dictionary: ' + this.dictionary);
+  //#NOTE - 20231028: Transform it to consume json configuration instead
+  monitorFunction(remark, counter) {
+    console.log('                                  ' + remark);
+    console.log('counter i: ' + counter);
+    console.log('input progress: ' + this.string.slice(0,(counter + 1)));
+    console.log('temporaryEntry: ' + this.temporaryEntry);
+    console.log('longestMatchingEntry: ' + this.longestMatchingEntry);
+    console.log('positonMatchPointer: ' + this.positonMatchPointer);
+    console.log('encodedId: ' + this.encodedId);
+    console.log('dictionary: ' + this.dictionary);
     console.log('');
   }
 
@@ -223,6 +235,11 @@ class dbrzEncoderVDE {
     }
   }
 
+  calculateVirtualIndex() {
+    this.relativeDist = this.positonMatchPointer + this.distance - 1 - (this.acceptedCharacters.length);
+    this.encodedId = ((this.relativeDist * (this.relativeDist + 1)) / 2) + this.distance + (this.acceptedCharacters.length - 1);
+  }
+
   flushDictionary() {
 
   }
@@ -235,7 +252,7 @@ class dbrzEncoderVDE {
 
 const dbrzEVDE = new dbrzEncoderVDE();
 dbrzEVDE.initDictionary("");
-//dbrzEVDE.setInputString("text to be encoded text to be encoded");
-dbrzEVDE.setInputString("texttexttexttexttexttexttexttexttexttexttexttext");
+dbrzEVDE.setInputString("text to be encoded text to be encoded");
+//dbrzEVDE.setInputString("texttexttexttexttexttexttexttexttexttexttexttext");
 //dbrzEVDE.setInputString("text to be encoded");
 dbrzEVDE.encode();
