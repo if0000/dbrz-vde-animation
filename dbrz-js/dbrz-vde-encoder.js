@@ -3,7 +3,7 @@
 //  
 //  Author: Istvan Finta @ Roni Zongor & Co. / TECH
 //  https://tech.ronizongor.com
-//  v:0.0.1
+//  v:1.0.0
 //
 //  Description:
 //
@@ -43,7 +43,6 @@ class dbrzEncoderVDE {
 
   encode() {
 
-    //let temporaryEntry = "";
     let subsEntryUnderInvestigation;
     let j = 0;
 
@@ -55,14 +54,18 @@ class dbrzEncoderVDE {
         if (this.checkPrimaryEntryMatch(this.temporaryEntry + this.string.charAt(i))) {
 
           this.temporaryEntry = this.temporaryEntry + this.string.charAt(i);
+
           //#FIXME
           this.logFunction(59, i);
 
         } else {
 
+          //#FIXME
+          this.logFunction(63, i);
           this.longestMatchingEntry = this.temporaryEntry;
           this.positonMatchPointer = this.dictionaryAux.get(this.longestMatchingEntry);
           this.temporaryEntry = this.string.charAt(i);
+
           //#FIXME
           this.logFunction(67, i);
 
@@ -75,6 +78,9 @@ class dbrzEncoderVDE {
             let nextEntryPos = this.dictionary.length;
             this.dictionary[nextEntryPos] = this.longestMatchingEntry;
             this.dictionaryAux.set(this.longestMatchingEntry, nextEntryPos);
+
+            //#FIXME
+            this.logFunction(79, i);
 
           } else {
 
@@ -89,7 +95,7 @@ class dbrzEncoderVDE {
       } else {
 
         // The match is over the static part of the dictionary AND the subsequent entry exists.
-        if(this.acceptedCharacters.length <= this.positonMatchPointer && (this.positonMatchPointer + this.distance) < this.dictionary.length) {
+        if((this.positonMatchPointer + this.distance) < this.dictionary.length) {
 
           // The end of the subsequent word has NOT been reached yet.
           if (subsEntryUnderInvestigation == undefined) {
@@ -105,10 +111,10 @@ class dbrzEncoderVDE {
 
             //#FIXME
             console.log('subsEntryUnderInvestigation: ' + subsEntryUnderInvestigation);
-
+            
+            this.temporaryEntry = this.temporaryEntry + this.string.charAt(i);
             // Match the next character
             if (subsEntryUnderInvestigation.charAt(j) == this.string.charAt(i)) {
-              this.temporaryEntry = this.temporaryEntry + this.string.charAt(i);
 
               //#FIXME
               this.logFunction(114, i);
@@ -128,7 +134,8 @@ class dbrzEncoderVDE {
               this.logFunction(128, i);
 
               this.longestMatchingEntry = "";
-              this.temporaryEntry = "";
+              this.temporaryEntry = this.string.charAt(i);
+              subsEntryUnderInvestigation = undefined;
 
               i = i - j + 1;
 
@@ -147,6 +154,7 @@ class dbrzEncoderVDE {
             j = 1;
             this.distance = this.distance + 1;
             subsEntryUnderInvestigation = undefined;
+
             //#FIXME
             this.logFunction(150, i);
 
@@ -165,9 +173,8 @@ class dbrzEncoderVDE {
           this.logFunction(164, i);
           
           this.longestMatchingEntry = "";
-          this.temporaryEntry = "";
-
-          i = i - 1;
+          this.temporaryEntry = this.string.charAt(i);
+          subsEntryUnderInvestigation = undefined;
 
           this.distance = 0;
           this.virtualMode = false;
