@@ -29,6 +29,7 @@ class dbrzEncoderVDE {
     this.string = "";
     this.progressCounter = 0;
 
+    this.nextEntryPos = 0;
     this.dictionary = [];
     this.dictionaryAux = new Map();
 
@@ -83,9 +84,9 @@ class dbrzEncoderVDE {
 
           if(!this.dictionaryAux.has(this.longestMatchingEntry)) {
 
-            let nextEntryPos = this.dictionary.length;
-            this.dictionary[nextEntryPos] = this.longestMatchingEntry;
-            this.dictionaryAux.set(this.longestMatchingEntry, nextEntryPos);
+            this.nextEntryPos = this.dictionary.length;
+            this.dictionary[this.nextEntryPos] = this.longestMatchingEntry;
+            this.dictionaryAux.set(this.longestMatchingEntry, this.nextEntryPos);
 
           }
 
@@ -119,9 +120,6 @@ class dbrzEncoderVDE {
           }
 
           if (j < subsEntryUnderInvestigation.length) {
-
-            //#FIXME
-            console.log('subsEntryUnderInvestigation: ' + subsEntryUnderInvestigation);
             
             this.temporaryEntry = this.temporaryEntry + this.string.charAt(this.progressCounter);
             // Match the next character
@@ -138,9 +136,9 @@ class dbrzEncoderVDE {
 
               if(!this.dictionaryAux.has(this.longestMatchingEntry)) {
 
-                let nextEntryPos = this.dictionary.length;
-                this.dictionary[nextEntryPos] = this.longestMatchingEntry;
-                this.dictionaryAux.set(this.longestMatchingEntry, nextEntryPos);
+                this.nextEntryPos = this.dictionary.length;
+                this.dictionary[this.nextEntryPos] = this.longestMatchingEntry;
+                this.dictionaryAux.set(this.longestMatchingEntry, this.nextEntryPos);
     
               }
 
@@ -184,9 +182,9 @@ class dbrzEncoderVDE {
 
           if(!this.dictionaryAux.has(this.longestMatchingEntry)) {
 
-            let nextEntryPos = this.dictionary.length;
-            this.dictionary[nextEntryPos] = this.longestMatchingEntry;
-            this.dictionaryAux.set(this.longestMatchingEntry, nextEntryPos);
+            this.nextEntryPos = this.dictionary.length;
+            this.dictionary[this.nextEntryPos] = this.longestMatchingEntry;
+            this.dictionaryAux.set(this.longestMatchingEntry, this.nextEntryPos);
 
           }
 
@@ -219,9 +217,9 @@ class dbrzEncoderVDE {
 
           if(!this.dictionaryAux.has(this.longestMatchingEntry)) {
 
-            let nextEntryPos = this.dictionary.length;
-            this.dictionary[nextEntryPos] = this.longestMatchingEntry;
-            this.dictionaryAux.set(this.longestMatchingEntry, nextEntryPos);
+            this.nextEntryPos = this.dictionary.length;
+            this.dictionary[this.nextEntryPos] = this.longestMatchingEntry;
+            this.dictionaryAux.set(this.longestMatchingEntry, this.nextEntryPos);
 
           }
 
@@ -249,7 +247,7 @@ class dbrzEncoderVDE {
 
             this.temporaryEntry = "";
 
-            this.monitorFunction("14 - End of string but the state variables are not empty");
+            this.monitorFunction("14 - End of string and everything is empty");
 
           } else {
 
@@ -304,10 +302,26 @@ class dbrzEncoderVDE {
   }
 
   calculateVirtualIndex() {
-    //this.relativeDist = this.positonMatchPointer + this.distance  - (this.acceptedCharacters.length);
-    this.relativeDist = this.positonMatchPointer + this.distance - 1 - (this.acceptedCharacters.length);
-    //this.encodedId = ((this.relativeDist * (this.relativeDist + 1)) / 2) + this.distance + (this.acceptedCharacters.length);
-    this.encodedId = ((this.relativeDist * (this.relativeDist + 1)) / 2) + this.distance + (this.acceptedCharacters.length - 1);
+
+    if(this.distance == 0) {
+
+      if(this.positonMatchPointer < this.acceptedCharacters.length) {
+        
+        this.encodedId = this.positonMatchPointer;
+
+      } else {
+
+        this.relativeDist = this.positonMatchPointer - this.acceptedCharacters.length;
+        this.encodedId = ((this.relativeDist * (this.relativeDist + 1)) / 2) + this.acceptedCharacters.length - 1;
+
+      }
+
+    } else {
+
+      this.relativeDist = this.positonMatchPointer + this.distance - this.acceptedCharacters.length;
+      this.encodedId = ((this.relativeDist * (this.relativeDist + 1)) / 2) + this.distance + this.acceptedCharacters.length - 1;
+
+    }
   }
 
   flushDictionary() {
