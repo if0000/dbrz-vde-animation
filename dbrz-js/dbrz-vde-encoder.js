@@ -79,9 +79,15 @@ class dbrzEncoderVDE {
           if (this.positonMatchPointer < this.acceptedCharacters.length) {
 
             this.longestMatchingEntry = this.longestMatchingEntry + this.temporaryEntry;
+
+
+          if(!this.dictionaryAux.has(this.longestMatchingEntry)) {
+
             let nextEntryPos = this.dictionary.length;
             this.dictionary[nextEntryPos] = this.longestMatchingEntry;
             this.dictionaryAux.set(this.longestMatchingEntry, nextEntryPos);
+
+          }
 
             this.encodedId = this.positonMatchPointer;
 
@@ -130,9 +136,13 @@ class dbrzEncoderVDE {
 
               this.longestMatchingEntry = this.longestMatchingEntry + this.temporaryEntry;
 
-              let nextEntryPos = this.dictionary.length;
-              this.dictionary[nextEntryPos] = this.longestMatchingEntry;
-              this.dictionaryAux.set(this.longestMatchingEntry, nextEntryPos);
+              if(!this.dictionaryAux.has(this.longestMatchingEntry)) {
+
+                let nextEntryPos = this.dictionary.length;
+                this.dictionary[nextEntryPos] = this.longestMatchingEntry;
+                this.dictionaryAux.set(this.longestMatchingEntry, nextEntryPos);
+    
+              }
 
               this.calculateVirtualIndex();
 
@@ -171,9 +181,14 @@ class dbrzEncoderVDE {
           this.progressCounter = (this.progressCounter - j);
 
           this.longestMatchingEntry = this.longestMatchingEntry + this.string.charAt((this.progressCounter));
-          let nextEntryPos = this.dictionary.length;
-          this.dictionary[nextEntryPos] = this.longestMatchingEntry;
-          this.dictionaryAux.set(this.longestMatchingEntry, nextEntryPos);
+
+          if(!this.dictionaryAux.has(this.longestMatchingEntry)) {
+
+            let nextEntryPos = this.dictionary.length;
+            this.dictionary[nextEntryPos] = this.longestMatchingEntry;
+            this.dictionaryAux.set(this.longestMatchingEntry, nextEntryPos);
+
+          }
 
           this.calculateVirtualIndex();
 
@@ -192,22 +207,23 @@ class dbrzEncoderVDE {
       // End of the input string: the internal states has to be examined for proper handling.
       if(this.progressCounter == (this.string.length - 1)) {
 
-        //Primary entries
-
-        //Virtual entries
-
-
-
         if(this.longestMatchingEntry.length != 0) {
 
-          this.progressCounter = (this.progressCounter - j);
+          if(1 < j) {
+            this.progressCounter = (this.progressCounter - j + 1);
+          } else {
+            this.progressCounter = (this.progressCounter - j);
+          }
 
           this.monitorFunction("10 - End of string but the state variables are not empty - after progressCounter change.");
 
-          //this.longestMatchingEntry = this.longestMatchingEntry + this.string.charAt((this.progressCounter));
-          let nextEntryPos = this.dictionary.length;
-          this.dictionary[nextEntryPos] = this.longestMatchingEntry;
-          this.dictionaryAux.set(this.longestMatchingEntry, nextEntryPos);
+          if(!this.dictionaryAux.has(this.longestMatchingEntry)) {
+
+            let nextEntryPos = this.dictionary.length;
+            this.dictionary[nextEntryPos] = this.longestMatchingEntry;
+            this.dictionaryAux.set(this.longestMatchingEntry, nextEntryPos);
+
+          }
 
           this.calculateVirtualIndex();
 
@@ -248,8 +264,9 @@ class dbrzEncoderVDE {
   //#NOTE - 20231028: Transform it to consume json configuration instead
   monitorFunction(remark) {
     console.log('                                  ' + remark);
-    console.log('progressCounter: ' + this.progressCounter);
     console.log('input progress: ' + this.string.slice(0,(this.progressCounter + 1)));
+    console.log('progressCounter: ' + this.progressCounter);
+    console.log('distance: ' + this.distance);
     console.log('temporaryEntry: ' + this.temporaryEntry);
     console.log('longestMatchingEntry: ' + this.longestMatchingEntry);
     console.log('positonMatchPointer: ' + this.positonMatchPointer);
@@ -287,7 +304,9 @@ class dbrzEncoderVDE {
   }
 
   calculateVirtualIndex() {
+    //this.relativeDist = this.positonMatchPointer + this.distance  - (this.acceptedCharacters.length);
     this.relativeDist = this.positonMatchPointer + this.distance - 1 - (this.acceptedCharacters.length);
+    //this.encodedId = ((this.relativeDist * (this.relativeDist + 1)) / 2) + this.distance + (this.acceptedCharacters.length);
     this.encodedId = ((this.relativeDist * (this.relativeDist + 1)) / 2) + this.distance + (this.acceptedCharacters.length - 1);
   }
 
@@ -304,7 +323,7 @@ class dbrzEncoderVDE {
 const dbrzEVDE = new dbrzEncoderVDE();
 dbrzEVDE.initDictionary("");
 //dbrzEVDE.setInputString("text to be encoded text to be encoded text to be encoded text to be encoded");
-dbrzEVDE.setInputString("text to be encoded text to be encoded");
-//dbrzEVDE.setInputString("texttexttexttexttexttexttexttexttexttexttexttext");
+//dbrzEVDE.setInputString("text to be encoded text to be encoded");
+dbrzEVDE.setInputString("texttexttexttexttexttexttexttexttexttexttexttext");
 //dbrzEVDE.setInputString("text to be encoded");
 dbrzEVDE.encode();
