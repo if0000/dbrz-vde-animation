@@ -153,7 +153,7 @@ class dbrzEncoderVDE {
           // Check the next subsequent primary entry.
           } else {
 
-            this.monitorFunction("07 - End of a subsequent word with full match. Setup the check for the next one.");
+            this.monitorFunction("07 - End of a subsequent word with full match. Setup to check for the next one.");
 
             this.longestMatchingEntry = this.longestMatchingEntry + this.temporaryEntry;
             this.temporaryEntry = this.string.charAt(this.progressCounter);
@@ -191,17 +191,27 @@ class dbrzEncoderVDE {
 
       // End of the input string: the internal states has to be examined for proper handling.
       if(this.progressCounter == (this.string.length - 1)) {
-        if(this.longestMatchingEntry != "") {
+
+        //Primary entries
+
+        //Virtual entries
+
+
+
+        if(this.longestMatchingEntry.length != 0) {
+
           this.progressCounter = (this.progressCounter - j);
 
-          this.longestMatchingEntry = this.longestMatchingEntry + this.string.charAt((this.progressCounter));
+          this.monitorFunction("10 - End of string but the state variables are not empty - after progressCounter change.");
+
+          //this.longestMatchingEntry = this.longestMatchingEntry + this.string.charAt((this.progressCounter));
           let nextEntryPos = this.dictionary.length;
           this.dictionary[nextEntryPos] = this.longestMatchingEntry;
           this.dictionaryAux.set(this.longestMatchingEntry, nextEntryPos);
 
           this.calculateVirtualIndex();
 
-          this.monitorFunction("10 - End of string but the state variables are still not empty.");
+          this.monitorFunction("11 - End of string but the state variables are not empty - after first swap and index calculation.");
           
           this.longestMatchingEntry = "";
           this.temporaryEntry = this.string.charAt(this.progressCounter);
@@ -209,6 +219,27 @@ class dbrzEncoderVDE {
 
           this.distance = 0;
           this.virtualMode = false;
+
+          this.monitorFunction("12 - End of string but the state variables are not empty - after second swap.");
+
+        } else {
+
+          if( this.temporaryEntry != 0 ) {
+
+            this.monitorFunction("13 - End of string but the state variables are not empty");
+
+            this.positonMatchPointer = this.dictionaryAux.get(this.temporaryEntry);
+            this.calculateVirtualIndex();
+
+            this.temporaryEntry = "";
+
+            this.monitorFunction("14 - End of string but the state variables are not empty");
+
+          } else {
+
+            exit(0);
+
+          }
         }
       }
     }
