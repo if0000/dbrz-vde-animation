@@ -1,5 +1,5 @@
 //
-//  Module: dbrzEncoderVDE
+//  Module: dbrzVDEEncoder
 //  
 //  Author: Istvan Finta @ Roni Zongor & Co. / TECH
 //  https://tech.ronizongor.com
@@ -8,12 +8,12 @@
 //  Description:
 //
 //  This is the encoder model. This is a simplified demonstrative implementation, not for production use! If you need a production ready algorithm contact us.
-//  This module is responsible to encode the input character stream and depending on the settings provides insight into the current dictionary state.
+//  This module is responsible to encode the input character stream and depending on the settings provides insight into the current dictionary state in an Observer pattern like manner (one can subscribe for different measured values and states).
 //  This implementation allows multiple occurence of that entries which are the result of virtual composition.
 //  The environment must be able to handle such circumstances, when the input is longer than the possible longest string, solution: chunking the input, next to the preservation of the already built dictionary.
 //
 
-class dbrzEncoderVDE {
+class dbrzVDEEncoder {
   constructor() {
 
     this.acceptedCharacters;
@@ -334,10 +334,10 @@ class dbrzEncoderVDE {
 
 }
 
-const dbrzEVDE = new dbrzEncoderVDE();
-dbrzEVDE.initDictionary("");
-//dbrzEVDE.setInputString("text to be encoded text to be encoded text to be encoded text to be encoded");
-//dbrzEVDE.setInputString("text to be encoded text to be encoded");
-dbrzEVDE.setInputString("texttexttexttexttexttexttexttexttexttexttexttext");
-//dbrzEVDE.setInputString("text to be encoded");
-dbrzEVDE.encode();
+const dbrzVDEE = new dbrzVDEEncoder();
+dbrzVDEE.initDictionary("");
+//dbrzVDEE.setInputString("text to be encoded text to be encoded text to be encoded text to be encoded");
+//dbrzVDEE.setInputString("text to be encoded text to be encoded");
+dbrzVDEE.setInputString("texttexttexttexttexttexttexttexttexttexttexttext");
+//dbrzVDEE.setInputString("text to be encoded");
+dbrzVDEE.encode();
