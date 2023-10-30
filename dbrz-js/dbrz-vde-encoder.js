@@ -13,7 +13,7 @@
 //  The environment must be able to handle such circumstances, when the input is longer than the possible longest string, solution: chunking the input, next to the preservation of the already built dictionary.
 //
 
-class dbrzVDEEncoder {
+class dbrzVDEEncoder extends dbrzVDEObserver {
   constructor() {
 
     this.acceptedCharacters;
@@ -35,6 +35,9 @@ class dbrzVDEEncoder {
 
     this.relativeDist = -1;
     this.encodedId = -1;
+
+    this.listOfObservedValues = new Map();
+    this.presetObservables();
     
   }
 
@@ -261,6 +264,7 @@ class dbrzVDEEncoder {
 
   //#NOTE - 20231028: Transform it to consume json configuration instead
   monitorFunction(remark) {
+
     console.log('                                  ' + remark);
     console.log('input progress: ' + this.string.slice(0,(this.progressCounter + 1)));
     console.log('progressCounter: ' + this.progressCounter);
@@ -330,6 +334,55 @@ class dbrzVDEEncoder {
 
   rearrangeDictionary() {
 
+  }
+
+  presetObservables() {
+    //Triplet: group_id, related_internal_variable, subscriber_list
+    this.listOfObservedValues.set('progressCounter', new Set());
+    this.listOfObservedValues.set('progressString', new Set());
+    this.listOfObservedValues.set('distance', new Set());
+    this.listOfObservedValues.set('temporaryEntry', new Set());
+    this.listOfObservedValues.set('longestMatchingEntry', new Set());
+    this.listOfObservedValues.set('positionMatchPointer', new Set());
+    this.listOfObservedValues.set('encodedId', new Set());
+    this.listOfObservedValues.set('dictionary', new Set());
+  }
+
+  // Part of the Observer - external IF
+  subscribe(topic, subscriber) {
+    if(this.listOfObservedValues.has(topic)) {
+      this.listOfObservedValues.get(topic).add(subscriber);
+      return 0;
+    } else {
+      //There is not such topic to subscribe on.
+      return -1;
+    }
+  }
+
+  // Part of the Observer - external IF
+  unsubscribe(topic, subscriber) {
+    if(this.listOfObservedValues.has(topic)) {
+      if(this.listOfObservedValues.get(topic).has(subscriber)) {
+        this.listOfObservedValues.get(topic).delete(subscriber);
+        return 0;
+      } else {
+        return -1;  
+      }
+    } else {
+      //There is not such topic to unsubscribe from.
+      return -1;
+    }
+  }
+
+  // Part of the Observer - internal IF
+  notifySubs() {
+    for (const mapEntry of this.listOfObservedValues.entries()) {
+      if(mapEntry[1].size > 0) {
+        for (const setEntry of mapEntry[1]) {
+          setEntry.update();
+        }
+      }
+    }
   }
 
 }
