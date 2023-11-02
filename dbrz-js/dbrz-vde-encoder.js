@@ -13,8 +13,12 @@
 //  The environment must be able to handle such circumstances, when the input is longer than the possible longest string, solution: chunking the input, next to the preservation of the already built dictionary.
 //
 
-class dbrzVDEEncoder extends dbrzVDEObserver {
+import {dbrzVDEInterfaceObserver} from "./dbrz-vde-interface.js";
+
+class dbrzVDEEncoder extends dbrzVDEInterfaceObserver {
   constructor() {
+
+    super();
 
     this.acceptedCharacters;
     this.flushDictionary = true;
@@ -387,10 +391,13 @@ class dbrzVDEEncoder extends dbrzVDEObserver {
 
 }
 
-const dbrzVDEE = new dbrzVDEEncoder();
-dbrzVDEE.initDictionary("");
+//export default dbrzVDEEncoder
+export {dbrzVDEEncoder}
+
+//const dbrzVDEE = new dbrzVDEEncoder();
+//dbrzVDEE.initDictionary("");
 //dbrzVDEE.setInputString("text to be encoded text to be encoded text to be encoded text to be encoded");
 //dbrzVDEE.setInputString("text to be encoded text to be encoded");
-dbrzVDEE.setInputString("texttexttexttexttexttexttexttexttexttexttexttext");
+//dbrzVDEE.setInputString("texttexttexttexttexttexttexttexttexttexttexttext");
 //dbrzVDEE.setInputString("text to be encoded");
-dbrzVDEE.encode();
+//dbrzVDEE.encode();
