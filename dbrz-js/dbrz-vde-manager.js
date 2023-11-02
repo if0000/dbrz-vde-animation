@@ -24,12 +24,14 @@ class dbrzVDEManager {
     this.dbrzVDEPTOutput = new dbrzVDEPresentationTextual();
     this.dbrzVDEPTDictionary = new dbrzVDEPresentationTextual();
 
-    this.dbrzVDEE.subscribe('progressString', this.dbrzVDEPTInputProcessing);
+    this.dbrzVDEE.subscribe('string', this.dbrzVDEPTInputProcessing);
+    this.dbrzVDEE.subscribe('progressCounter', this.dbrzVDEPM);
     this.dbrzVDEE.subscribe('encodedId', this.dbrzVDEPTOutput);
     this.dbrzVDEE.subscribe('dictionary', this.dbrzVDEPTDictionary);
 
 
     this.dbrzVDEE.setInputString("texttexttexttexttexttexttexttexttexttexttexttext");
+    this.dbrzVDEE.unsubscribe('string', this.dbrzVDEPTInputProcessing);
     this.dbrzVDEE.encode();
   }
 }

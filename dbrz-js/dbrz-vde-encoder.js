@@ -28,6 +28,7 @@ class dbrzVDEEncoder {
 
     this.string = "";
     this.progressCounter = 0;
+    this.progressString = "";
 
     this.nextEntryPos = 0;
     this.dictionary = [];
@@ -45,6 +46,8 @@ class dbrzVDEEncoder {
   setInputString(input) {
 
     this.string = input;
+    
+    this.notifySubs(["string"]);
 
   }
 
@@ -353,7 +356,7 @@ class dbrzVDEEncoder {
   presetObservables() {
 
     this.listOfObservedValues.set('progressCounter', new Set());
-    this.listOfObservedValues.set('progressString', new Set());
+    this.listOfObservedValues.set('string', new Set());
     this.listOfObservedValues.set('distance', new Set());
     this.listOfObservedValues.set('temporaryEntry', new Set());
     this.listOfObservedValues.set('longestMatchingEntry', new Set());
@@ -399,17 +402,15 @@ class dbrzVDEEncoder {
   notifySubs(filterSetParams) {
     let filterSet;
     if("" != filterSetParams) {
-      filterSet = filterSetParams;
+      filterSet = new Set(filterSetParams);
     } else {
-      filterSet = new Set(['progressCounter', 'progressString', 'distance', 'temporaryEntry', 'longestMatchingEntry', 'positionMatchPointer', 'encodedId', 'dictionary']);
+      filterSet = new Set(['progressCounter', 'string', 'distance', 'temporaryEntry', 'longestMatchingEntry', 'positionMatchPointer', 'encodedId', 'dictionary']);
     }
 
     for (const mapEntry of this.listOfObservedValues.entries()) {
       if(filterSet.has(mapEntry[0])) {
         if(mapEntry[1].size > 0) {
           for (const setEntry of mapEntry[1]) {
-            //#FIXME
-            console.log("mapEntry[0]: " + mapEntry[0] + ", mapEntry[1]: " + mapEntry[1] + ", setEntry: " + JSON.stringify(setEntry));
             setEntry.update(this[mapEntry[0]]);
           }
         }
