@@ -12,13 +12,11 @@
 
 // Observer interface
 class dbrzVDEInterfaceObserver {
-  subscribe() {
+
+  update() {
 
   }
 
-  unsubscribe() {
-    
-  }
 }
 
 

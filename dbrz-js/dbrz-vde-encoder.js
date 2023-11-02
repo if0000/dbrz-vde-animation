@@ -13,12 +13,8 @@
 //  The environment must be able to handle such circumstances, when the input is longer than the possible longest string, solution: chunking the input, next to the preservation of the already built dictionary.
 //
 
-import {dbrzVDEInterfaceObserver} from "./dbrz-vde-interface.js";
-
-class dbrzVDEEncoder extends dbrzVDEInterfaceObserver {
+class dbrzVDEEncoder {
   constructor() {
-
-    super();
 
     this.acceptedCharacters;
     this.flushDictionary = true;
@@ -41,6 +37,7 @@ class dbrzVDEEncoder extends dbrzVDEInterfaceObserver {
     this.encodedId = -1;
 
     this.listOfObservedValues = new Map();
+    this.listOfObservedValuesMapper = new Map();
     this.presetObservables();
     
   }
@@ -270,15 +267,15 @@ class dbrzVDEEncoder extends dbrzVDEInterfaceObserver {
   monitorFunction(remark) {
 
     console.log('                                  ' + remark);
-    console.log('input progress: ' + this.string.slice(0,(this.progressCounter + 1)));
-    console.log('progressCounter: ' + this.progressCounter);
-    console.log('distance: ' + this.distance);
-    console.log('temporaryEntry: ' + this.temporaryEntry);
-    console.log('longestMatchingEntry: ' + this.longestMatchingEntry);
-    console.log('positonMatchPointer: ' + this.positonMatchPointer);
-    console.log('encodedId: ' + this.encodedId);
-    console.log('dictionary: ' + this.dictionary);
-    console.log('');
+    //console.log('input progress: ' + this.string.slice(0,(this.progressCounter + 1)));
+    //console.log('progressCounter: ' + this.progressCounter);
+    //console.log('distance: ' + this.distance);
+    //console.log('temporaryEntry: ' + this.temporaryEntry);
+    //console.log('longestMatchingEntry: ' + this.longestMatchingEntry);
+    //console.log('positonMatchPointer: ' + this.positonMatchPointer);
+    //console.log('encodedId: ' + this.encodedId);
+    //console.log('dictionary: ' + this.dictionary);
+    //console.log('');
   }
 
   checkPrimaryEntryMatch(wordToCheck) {
@@ -350,6 +347,16 @@ class dbrzVDEEncoder extends dbrzVDEInterfaceObserver {
     this.listOfObservedValues.set('positionMatchPointer', new Set());
     this.listOfObservedValues.set('encodedId', new Set());
     this.listOfObservedValues.set('dictionary', new Set());
+
+    this.listOfObservedValuesMapper.set('progressCounter', this.progressCounter);
+    this.listOfObservedValuesMapper.set('progressString', this.string.slice(0,(this.progressCounter + 1)));
+    this.listOfObservedValuesMapper.set('distance', this.distance);
+    this.listOfObservedValuesMapper.set('temporaryEntry', this.temporaryEntry);
+    this.listOfObservedValuesMapper.set('longestMatchingEntry', this.longestMatchingEntry);
+    this.listOfObservedValuesMapper.set('positionMatchPointer', this.positonMatchPointer);
+    this.listOfObservedValuesMapper.set('encodedId', this.encodedId);
+    this.listOfObservedValuesMapper.set('dictionary', this.dictionary);
+
   }
 
   // Part of the Observer - external IF
@@ -383,7 +390,7 @@ class dbrzVDEEncoder extends dbrzVDEInterfaceObserver {
     for (const mapEntry of this.listOfObservedValues.entries()) {
       if(mapEntry[1].size > 0) {
         for (const setEntry of mapEntry[1]) {
-          setEntry.update();
+          setEntry.update(this.listOfObservedValuesMapper.get(mapEntry[0]));
         }
       }
     }
