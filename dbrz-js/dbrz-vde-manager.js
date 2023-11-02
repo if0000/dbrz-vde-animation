@@ -20,9 +20,9 @@ class dbrzVDEManager {
 
     this.dbrzVDEPIF = new dbrzVDEPresentationInputField();
     this.dbrzVDEPM = new dbrzVDEPresentationMetrics();
+    this.dbrzVDEPTInputProcessing = new dbrzVDEPresentationTextual();
     this.dbrzVDEPTOutput = new dbrzVDEPresentationTextual();
     this.dbrzVDEPTDictionary = new dbrzVDEPresentationTextual();
-    this.dbrzVDEPTInputProcessing = new dbrzVDEPresentationTextual();
 
     this.dbrzVDEE.subscribe('progressString', this.dbrzVDEPTInputProcessing);
     this.dbrzVDEE.subscribe('encodedId', this.dbrzVDEPTOutput);
@@ -30,7 +30,7 @@ class dbrzVDEManager {
 
 
     this.dbrzVDEE.setInputString("texttexttexttexttexttexttexttexttexttexttexttext");
-    //this.dbrzVDEE.encode();
+    this.dbrzVDEE.encode();
   }
 }
 
