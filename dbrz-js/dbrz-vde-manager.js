@@ -7,7 +7,7 @@
 //
 //  Description:
 //
-//  This is the manager module of the VDE compression procedure and the collection of related interfaces.
+//  This is the management module of the VDE compression procedure.
 //
 
 import {dbrzVDEEncoder} from "./dbrz-vde-encoder.js";

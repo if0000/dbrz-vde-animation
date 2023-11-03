@@ -43,19 +43,24 @@ class dbrzVDEPresentationInputField extends dbrzVDEInterfaceObserver {
     super();
   }
 
-  update(...args) {
-    console.log("dbrzVDEPresentationInputField: " + args[0]);
+  update() {
+    if(arguments.length > 1) {
+      console.log("dbrzVDEPresentationInputField - topic: " + arguments[0] + ", value: " + arguments[1]);
+    }
   }
 }
 
 class dbrzVDEPresentationMetrics extends dbrzVDEInterfaceObserver {
 
-  constructor() {
+  constructor(svg) {
     super();
+    //this.svg = document.getElementById(svg);
   }
 
-  update(...args) {
-    console.log("dbrzVDEPresentationMetrics: " + args[0]);
+  update() {
+    if(arguments.length > 1) {
+      console.log("dbrzVDEPresentationMetrics - topic: " + arguments[0] + ", value: " + arguments[1]);
+    }
   }
 
 }
@@ -66,8 +71,10 @@ class dbrzVDEPresentationTextual extends dbrzVDEInterfaceObserver {
     super();
   }
 
-  update(...args) {
-    console.log("dbrzVDEPresentationTextual: " + args[0]);
+  update() {
+    if(arguments.length > 1) {
+      console.log("dbrzVDEPresentationTextual - topic: " + arguments[0] + ", value: " + arguments[1]);
+    }
   }
 
 }
