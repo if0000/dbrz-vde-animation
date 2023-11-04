@@ -41,11 +41,21 @@ class dbrzVDEPresentationInputField extends dbrzVDEInterfaceObserver {
 
   constructor() {
     super();
+    if(arguments.length > 0) {
+      if (document.getElementById(arguments[0]) != null) {
+        this.dbrzPresentationInputField = document.getElementById(arguments[0]);
+      } else {
+        //default VDE container is the parent to which has to be attached
+      }
+    } else {
+      //default VDE container is the parent to which has to be attached
+    }
   }
 
   update() {
     if(arguments.length > 1) {
-      console.log("dbrzVDEPresentationInputField - topic: " + arguments[0] + ", value: " + arguments[1]);
+      this.dbrzPresentationInputField.innerHTML = "dbrzVDEPresentationInputField - topic: " + arguments[0] + ", value: " + arguments[1];
+      //console.log("dbrzVDEPresentationInputField - topic: " + arguments[0] + ", value: " + arguments[1]);
     }
   }
 }
@@ -54,12 +64,20 @@ class dbrzVDEPresentationMetrics extends dbrzVDEInterfaceObserver {
 
   constructor(svg) {
     super();
-    //this.svg = document.getElementById(svg);
+    if(arguments.length > 0) {
+      if (document.getElementById(arguments[0]) != null) {
+        this.svg = document.getElementById(svg);
+      } else {
+        //default VDE container is the parent to which has to be attached
+      }
+    } else {
+      //default VDE container is the parent to which has to be attached
+    }
   }
 
   update() {
     if(arguments.length > 1) {
-      console.log("dbrzVDEPresentationMetrics - topic: " + arguments[0] + ", value: " + arguments[1]);
+      //console.log("dbrzVDEPresentationMetrics - topic: " + arguments[0] + ", value: " + arguments[1]);
     }
   }
 
@@ -69,11 +87,21 @@ class dbrzVDEPresentationTextual extends dbrzVDEInterfaceObserver {
 
   constructor() {
     super();
+    if(arguments.length > 0) {
+      if (document.getElementById(arguments[0]) != null) {
+        this.dbrzPresentationTextualContainer = document.getElementById(arguments[0]);
+      } else {
+        //default VDE container is the parent to which has to be attached
+      }
+    } else {
+      //default VDE container is the parent to which has to be attached
+    }
   }
 
   update() {
     if(arguments.length > 1) {
-      console.log("dbrzVDEPresentationTextual - topic: " + arguments[0] + ", value: " + arguments[1]);
+      this.dbrzPresentationTextualContainer.innerHTML = "dbrzVDEPresentationTextual - topic: " + arguments[0] + ", value: " + arguments[1];
+      //console.log("dbrzVDEPresentationTextual - topic: " + arguments[0] + ", value: " + arguments[1]);
     }
   }
 

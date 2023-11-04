@@ -18,11 +18,11 @@ class dbrzVDEManager {
     this.dbrzVDEE = new dbrzVDEEncoder();
     this.dbrzVDEE.initDictionary("");
 
-    this.dbrzVDEPIF = new dbrzVDEPresentationInputField();
-    this.dbrzVDEPM = new dbrzVDEPresentationMetrics();
-    this.dbrzVDEPTTextProcessing = new dbrzVDEPresentationTextual();
-    this.dbrzVDEPTOutput = new dbrzVDEPresentationTextual();
-    this.dbrzVDEPTDictionary = new dbrzVDEPresentationTextual();
+    this.dbrzVDEPIF = new dbrzVDEPresentationInputField("dbrzVDEPresentationInputField");
+    this.dbrzVDEPM = new dbrzVDEPresentationMetrics("dbrzVDEPresentationMeasurement");
+    this.dbrzVDEPTTextProcessing = new dbrzVDEPresentationTextual("dbrzVDEPresentationInputString");
+    this.dbrzVDEPTOutput = new dbrzVDEPresentationTextual("dbrzVDEPresentationOutput");
+    this.dbrzVDEPTDictionary = new dbrzVDEPresentationTextual("dbrzVDEPresentationDictionary");
 
     this.dbrzVDEE.subscribe('checkpointDescription', this.dbrzVDEPTTextProcessing);
     this.dbrzVDEE.subscribe('string', this.dbrzVDEPTTextProcessing);
@@ -33,7 +33,7 @@ class dbrzVDEManager {
 
     this.dbrzVDEE.setInputString("texttexttexttexttexttexttexttexttexttexttexttext");
     this.dbrzVDEE.unsubscribe('string', this.dbrzVDEPTInputProcessing);
-    this.dbrzVDEE.encode(false);
+    this.dbrzVDEE.encode(true);
   }
 }
 
