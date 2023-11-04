@@ -10,8 +10,8 @@
 //  This is the management module of the VDE compression procedure.
 //
 
-import {dbrzVDEEncoder} from "./dbrz-vde-encoder.js";
-import {dbrzVDEPresentationInputField, dbrzVDEPresentationMetrics, dbrzVDEPresentationTextual} from "./dbrz-vde-presentation.js";
+//import {dbrzVDEEncoder} from "./dbrz-vde-encoder.js";
+//import {dbrzVDEPresentationInputField, dbrzVDEPresentationMetrics, dbrzVDEPresentationTextual} from "./dbrz-vde-presentation.js";
 
 class dbrzVDEManager {
   constructor() {
@@ -20,11 +20,12 @@ class dbrzVDEManager {
 
     this.dbrzVDEPIF = new dbrzVDEPresentationInputField();
     this.dbrzVDEPM = new dbrzVDEPresentationMetrics();
-    this.dbrzVDEPTInputProcessing = new dbrzVDEPresentationTextual();
+    this.dbrzVDEPTTextProcessing = new dbrzVDEPresentationTextual();
     this.dbrzVDEPTOutput = new dbrzVDEPresentationTextual();
     this.dbrzVDEPTDictionary = new dbrzVDEPresentationTextual();
 
-    this.dbrzVDEE.subscribe('string', this.dbrzVDEPTInputProcessing);
+    this.dbrzVDEE.subscribe('checkpointDescription', this.dbrzVDEPTTextProcessing);
+    this.dbrzVDEE.subscribe('string', this.dbrzVDEPTTextProcessing);
     this.dbrzVDEE.subscribe('progressCounter', this.dbrzVDEPM);
     this.dbrzVDEE.subscribe('encodedId', this.dbrzVDEPTOutput);
     this.dbrzVDEE.subscribe('dictionary', this.dbrzVDEPTDictionary);
@@ -32,7 +33,7 @@ class dbrzVDEManager {
 
     this.dbrzVDEE.setInputString("texttexttexttexttexttexttexttexttexttexttexttext");
     this.dbrzVDEE.unsubscribe('string', this.dbrzVDEPTInputProcessing);
-    this.dbrzVDEE.encode();
+    this.dbrzVDEE.encode(false);
   }
 }
 

@@ -26,6 +26,8 @@ class dbrzVDEEncoder {
     this.temporaryEntry = "";
     this.virtualMode = false;
 
+    this.checkpointDescription = "";
+
     this.string = "";
     this.progressCounter = 0;
     this.progressString = "";
@@ -39,6 +41,14 @@ class dbrzVDEEncoder {
 
     this.listOfObservedValues = new Map();
     this.presetObservables();
+
+    this.stepBystep = true;
+    this.elementEventAttached = document.getElementById("dbrzStepByStepBtn");
+    this.promise;
+    this.outsourcedResolve;
+
+    this.j = 0;
+    this.subsEntryUnderInvestigation = "";
     
   }
 
@@ -54,243 +64,265 @@ class dbrzVDEEncoder {
 
   }
 
-  encode() {
+  encode(stepBystep) {
+    this.stepBystep = stepBystep;
+    this.progressCounter = 0;
+    this.encodeController();
+  }
 
-    let subsEntryUnderInvestigation;
-    let j = 0;
+  async runScript() {
+    await this.promise;
+    this.encodeInAsyncEnv();
+    this.progressCounter++
+    this.elementEventAttached.removeEventListener("click", this.outsourcedResolve());
+    if(this.progressCounter < this.string.length) {
+      this.encodeController();
+    } else {
+      console.log("over");
+    }
+  }
 
-    for(this.progressCounter = 0; this.progressCounter < this.string.length; this.progressCounter++) {
+  encodeController() {
+    if(this.stepBystep) {
+      this.promise = new Promise((resolve, reject) => { 
+        this.outsourcedResolve = resolve;
+      });
+      this.elementEventAttached.addEventListener("click", () => {
+        this.outsourcedResolve("Resolved");
+      });
+      this.runScript();
+    } else {
+      for(this.progressCounter = 0; this.progressCounter < this.string.length; this.progressCounter++) {
+        this.encodeInAsyncEnv()
+      } 
+    }
+  }
 
-      // Searching for the longest fit in between the primary entries - just like the legacy LZW works, built incrementally to be able decode the encoded input.
-      if(!this.virtualMode) {
+  encodeInAsyncEnv() {
+    // Searching for the longest fit in between the primary entries - just like the legacy LZW works, built incrementally to be able decode the encoded input.
+    if(!this.virtualMode) {
 
-        if (this.checkPrimaryEntryMatch(this.temporaryEntry + this.string.charAt(this.progressCounter))) {
+      if (this.checkPrimaryEntryMatch(this.temporaryEntry + this.string.charAt(this.progressCounter))) {
 
-          this.temporaryEntry = this.temporaryEntry + this.string.charAt(this.progressCounter);
+        this.temporaryEntry = this.temporaryEntry + this.string.charAt(this.progressCounter);
 
-          this.checkpointDescription = "01 - Primary entry match.";
-          this.notifySubs("");
+        this.checkpointDescription = "01 - Primary entry match.";
+        this.notifySubs("");
 
-        } else {
-
-          this.checkpointDescription = "02 - One character longer than the longest primary entry.";
-          this.notifySubs("");
-
-          this.longestMatchingEntry = this.temporaryEntry;
-          this.positonMatchPointer = this.dictionaryAux.get(this.longestMatchingEntry);
-          this.temporaryEntry = this.string.charAt(this.progressCounter);
-
-          this.checkpointDescription = "03 - Before decide if the domain is still the static part of the dictionary or the dynamic one.";
-          this.notifySubs("");
-
-          // Here we can decide if we should start the virtual word search
-          // or we are still in the domain of static part.
-          // This shoul highly simplify the virtual part
-          if (this.positonMatchPointer < this.acceptedCharacters.length) {
-
-            this.longestMatchingEntry = this.longestMatchingEntry + this.temporaryEntry;
-
-
-          if(!this.dictionaryAux.has(this.longestMatchingEntry)) {
-
-            this.nextEntryPos = this.dictionary.length;
-            this.dictionary[this.nextEntryPos] = this.longestMatchingEntry;
-            this.dictionaryAux.set(this.longestMatchingEntry, this.nextEntryPos);
-
-          }
-
-            this.encodedId = this.positonMatchPointer;
-
-            this.checkpointDescription = "04 - Static part: two letters long word is written into the dictionary.";
-            this.notifySubs("");
-
-          } else {
-
-            j = 1;
-            this.distance = 1;
-            this.virtualMode = true;
-
-          }
-        }
-      
-      // Searching for the available longest fit virtual entry starting from the longest matching primary entry.
       } else {
 
-        // The match is over the static part of the dictionary AND the subsequent entry exists.
-        if((this.positonMatchPointer + this.distance) < this.dictionary.length) {
+        this.checkpointDescription = "02 - One character longer than the longest primary entry.";
+        this.notifySubs("");
 
-          // The end of the subsequent word has NOT been reached yet.
-          if (subsEntryUnderInvestigation == undefined) {
+        this.longestMatchingEntry = this.temporaryEntry;
+        this.positonMatchPointer = this.dictionaryAux.get(this.longestMatchingEntry);
+        this.temporaryEntry = this.string.charAt(this.progressCounter);
 
-            subsEntryUnderInvestigation = this.dictionary[(this.positonMatchPointer + this.distance)];
+        this.checkpointDescription = "03 - Before decide if the domain is still the static part of the dictionary or the dynamic one.";
+        this.notifySubs("");
 
-            this.progressCounter = this.progressCounter - 1;
-            this.temporaryEntry = "";
+        // Here we can decide if we should start the virtual word search
+        // or we are still in the domain of static part.
+        // This shoul highly simplify the virtual part
+        if (this.positonMatchPointer < this.acceptedCharacters.length) {
 
-          }
+          this.longestMatchingEntry = this.longestMatchingEntry + this.temporaryEntry;
 
-          if (j < subsEntryUnderInvestigation.length) {
-            
-            this.temporaryEntry = this.temporaryEntry + this.string.charAt(this.progressCounter);
-            // Match the next character
-            if (subsEntryUnderInvestigation.charAt(j) == this.string.charAt(this.progressCounter)) {
 
-              this.checkpointDescription = "05 - Character match during the examination of chaining of subsequent primary words.";
-              this.notifySubs("");
+        if(!this.dictionaryAux.has(this.longestMatchingEntry)) {
 
-              j = j + 1;
+          this.nextEntryPos = this.dictionary.length;
+          this.dictionary[this.nextEntryPos] = this.longestMatchingEntry;
+          this.dictionaryAux.set(this.longestMatchingEntry, this.nextEntryPos);
 
-            // No more match:
-            } else {
+        }
 
-              this.longestMatchingEntry = this.longestMatchingEntry + this.temporaryEntry;
+          this.encodedId = this.positonMatchPointer;
 
-              if(!this.dictionaryAux.has(this.longestMatchingEntry)) {
+          this.checkpointDescription = "04 - Static part: two letters long word is written into the dictionary.";
+          this.notifySubs("");
 
-                this.nextEntryPos = this.dictionary.length;
-                this.dictionary[this.nextEntryPos] = this.longestMatchingEntry;
-                this.dictionaryAux.set(this.longestMatchingEntry, this.nextEntryPos);
-    
-              }
-
-              this.calculateVirtualIndex();
-
-              this.checkpointDescription = "06 - No more character match during virtual word composition. Index issue and dictionary update.";
-              this.notifySubs("");
-
-              this.longestMatchingEntry = "";
-              this.temporaryEntry = this.string.charAt(this.progressCounter);
-              subsEntryUnderInvestigation = undefined;
-
-              this.progressCounter = this.progressCounter - j + 1;
-
-              this.distance = 0;
-              this.virtualMode = false;
-
-            }
-
-          // The end of the subsequent word has already been reached.
-          // Check the next subsequent primary entry.
-          } else {
-
-            this.checkpointDescription = "07 - End of a subsequent word with full match. Setup to check for the next one.";
-            this.notifySubs("");
-
-            this.longestMatchingEntry = this.longestMatchingEntry + this.temporaryEntry;
-            this.temporaryEntry = this.string.charAt(this.progressCounter);
-            j = 1;
-            this.distance = this.distance + 1;
-            subsEntryUnderInvestigation = undefined;
-
-            this.checkpointDescription = "08 - State after setup.";
-            this.notifySubs("");
-
-          }
-
-        // No more subsequent primary entries to check
         } else {
 
-          this.progressCounter = (this.progressCounter - j);
-
-          this.longestMatchingEntry = this.longestMatchingEntry + this.string.charAt((this.progressCounter));
-
-          if(!this.dictionaryAux.has(this.longestMatchingEntry)) {
-
-            this.nextEntryPos = this.dictionary.length;
-            this.dictionary[this.nextEntryPos] = this.longestMatchingEntry;
-            this.dictionaryAux.set(this.longestMatchingEntry, this.nextEntryPos);
-
-          }
-
-          this.calculateVirtualIndex();
-
-          this.checkpointDescription = "09 - No more possibility to chaining, since no more primary entries in the dictionary.";
-          this.notifySubs("");
-          
-          this.longestMatchingEntry = "";
-          this.temporaryEntry = this.string.charAt(this.progressCounter);
-          subsEntryUnderInvestigation = undefined;
-
-          this.distance = 0;
-          this.virtualMode = false;
+          this.j = 1;
+          this.distance = 1;
+          this.virtualMode = true;
 
         }
       }
+    
+    // Searching for the available longest fit virtual entry starting from the longest matching primary entry.
+    } else {
 
-      // End of the input string: the internal states has to be examined for proper handling.
-      if(this.progressCounter == (this.string.length - 1)) {
+      // The match is over the static part of the dictionary AND the subsequent entry exists.
+      if((this.positonMatchPointer + this.distance) < this.dictionary.length) {
 
-        if(this.longestMatchingEntry.length != 0) {
+        // The end of the subsequent word has NOT been reached yet.
+        if (this.subsEntryUnderInvestigation == undefined) {
 
-          if(1 < j) {
-            this.progressCounter = (this.progressCounter - j + 1);
+          this.subsEntryUnderInvestigation = this.dictionary[(this.positonMatchPointer + this.distance)];
+
+          this.progressCounter = this.progressCounter - 1;
+          this.temporaryEntry = "";
+
+        }
+
+        if (this.j < this.subsEntryUnderInvestigation.length) {
+          
+          this.temporaryEntry = this.temporaryEntry + this.string.charAt(this.progressCounter);
+          // Match the next character
+          if (this.subsEntryUnderInvestigation.charAt(this.j) == this.string.charAt(this.progressCounter)) {
+
+            this.checkpointDescription = "05 - Character match during the examination of chaining of subsequent primary words.";
+            this.notifySubs("");
+
+            this.j = this.j + 1;
+
+          // No more match:
           } else {
-            this.progressCounter = (this.progressCounter - j);
+
+            this.longestMatchingEntry = this.longestMatchingEntry + this.temporaryEntry;
+
+            if(!this.dictionaryAux.has(this.longestMatchingEntry)) {
+
+              this.nextEntryPos = this.dictionary.length;
+              this.dictionary[this.nextEntryPos] = this.longestMatchingEntry;
+              this.dictionaryAux.set(this.longestMatchingEntry, this.nextEntryPos);
+  
+            }
+
+            this.calculateVirtualIndex();
+
+            this.checkpointDescription = "06 - No more character match during virtual word composition. Index issue and dictionary update.";
+            this.notifySubs("");
+
+            this.longestMatchingEntry = "";
+            this.temporaryEntry = this.string.charAt(this.progressCounter);
+            this.subsEntryUnderInvestigation = undefined;
+
+            this.progressCounter = this.progressCounter - this.j + 1;
+
+            this.distance = 0;
+            this.virtualMode = false;
+
           }
 
-          this.checkpointDescription = "10 - End of string but the state variables are not empty - after progressCounter change.";
+        // The end of the subsequent word has already been reached.
+        // Check the next subsequent primary entry.
+        } else {
+
+          this.checkpointDescription = "07 - End of a subsequent word with full match. Setup to check for the next one.";
           this.notifySubs("");
 
-          if(!this.dictionaryAux.has(this.longestMatchingEntry)) {
+          this.longestMatchingEntry = this.longestMatchingEntry + this.temporaryEntry;
+          this.temporaryEntry = this.string.charAt(this.progressCounter);
+          this.j = 1;
+          this.distance = this.distance + 1;
+          this.subsEntryUnderInvestigation = undefined;
 
-            this.nextEntryPos = this.dictionary.length;
-            this.dictionary[this.nextEntryPos] = this.longestMatchingEntry;
-            this.dictionaryAux.set(this.longestMatchingEntry, this.nextEntryPos);
+          this.checkpointDescription = "08 - State after setup.";
+          this.notifySubs("");
 
-          }
+        }
 
+      // No more subsequent primary entries to check
+      } else {
+
+        this.progressCounter = (this.progressCounter - this.j);
+
+        this.longestMatchingEntry = this.longestMatchingEntry + this.string.charAt((this.progressCounter));
+
+        if(!this.dictionaryAux.has(this.longestMatchingEntry)) {
+
+          this.nextEntryPos = this.dictionary.length;
+          this.dictionary[this.nextEntryPos] = this.longestMatchingEntry;
+          this.dictionaryAux.set(this.longestMatchingEntry, this.nextEntryPos);
+
+        }
+
+        this.calculateVirtualIndex();
+
+        this.checkpointDescription = "09 - No more possibility to chaining, since no more primary entries in the dictionary.";
+        this.notifySubs("");
+        
+        this.longestMatchingEntry = "";
+        this.temporaryEntry = this.string.charAt(this.progressCounter);
+        this.subsEntryUnderInvestigation = undefined;
+
+        this.distance = 0;
+        this.virtualMode = false;
+
+      }
+    }
+
+    // End of the input string: the internal states has to be examined for proper handling.
+    if(this.progressCounter == (this.string.length - 1)) {
+
+      if(this.longestMatchingEntry.length != 0) {
+
+        if(1 < this.j) {
+          this.progressCounter = (this.progressCounter - this.j + 1);
+        } else {
+          this.progressCounter = (this.progressCounter - this.j);
+        }
+
+        this.checkpointDescription = "10 - End of string but the state variables are not empty - after progressCounter change.";
+        this.notifySubs("");
+
+        if(!this.dictionaryAux.has(this.longestMatchingEntry)) {
+
+          this.nextEntryPos = this.dictionary.length;
+          this.dictionary[this.nextEntryPos] = this.longestMatchingEntry;
+          this.dictionaryAux.set(this.longestMatchingEntry, this.nextEntryPos);
+
+        }
+
+        this.calculateVirtualIndex();
+
+        this.checkpointDescription = "11 - End of string but the state variables are not empty - after first swap and index calculation.";
+        this.notifySubs("");
+        
+        this.longestMatchingEntry = "";
+        this.temporaryEntry = this.string.charAt(this.progressCounter);
+        this.subsEntryUnderInvestigation = undefined;
+
+        this.distance = 0;
+        this.virtualMode = false;
+
+        this.checkpointDescription = "12 - End of string but the state variables are not empty - after second swap.";
+        this.notifySubs("");
+
+      } else {
+
+        if( this.temporaryEntry != 0 ) {
+
+          this.checkpointDescription = "13 - End of string but the state variables are not empty";
+          this.notifySubs("");
+
+          this.positonMatchPointer = this.dictionaryAux.get(this.temporaryEntry);
           this.calculateVirtualIndex();
 
-          this.checkpointDescription = "11 - End of string but the state variables are not empty - after first swap and index calculation.";
-          this.notifySubs("");
-          
-          this.longestMatchingEntry = "";
-          this.temporaryEntry = this.string.charAt(this.progressCounter);
-          subsEntryUnderInvestigation = undefined;
+          this.temporaryEntry = "";
 
-          this.distance = 0;
-          this.virtualMode = false;
-
-          this.checkpointDescription = "12 - End of string but the state variables are not empty - after second swap.";
+          this.checkpointDescription = "14 - End of string and everything is empty";
           this.notifySubs("");
 
         } else {
 
-          if( this.temporaryEntry != 0 ) {
+          exit(0);
 
-            this.checkpointDescription = "13 - End of string but the state variables are not empty";
-            this.notifySubs("");
-
-            this.positonMatchPointer = this.dictionaryAux.get(this.temporaryEntry);
-            this.calculateVirtualIndex();
-
-            this.temporaryEntry = "";
-
-            this.checkpointDescription = "14 - End of string and everything is empty";
-            this.notifySubs("");
-
-          } else {
-
-            exit(0);
-
-          }
         }
       }
     }
   }
 
-  //#NOTE - 20231028: Transform it to consume json configuration instead
-  monitorFunction(remark) {
-
-    console.log('                                  ' + remark);
-
-  }
-
+  
   checkPrimaryEntryMatch(wordToCheck) {
 
     return this.dictionaryAux.has(wordToCheck);
 
   }
+
 
   //Simplified: for the sake of simplicity those "bytes" which are out of the set will be skipped during processing
   initDictionary(acceptedChars) {
@@ -312,6 +344,7 @@ class dbrzVDEEncoder {
 
     }
   }
+
 
   calculateVirtualIndex() {
 
@@ -336,13 +369,16 @@ class dbrzVDEEncoder {
     }
   }
 
+
   flushDictionary() {
 
   }
 
+
   rearrangeDictionary() {
 
   }
+
 
   presetObservables() {
 
@@ -412,13 +448,4 @@ class dbrzVDEEncoder {
 
 }
 
-//export default dbrzVDEEncoder
-export {dbrzVDEEncoder}
-
-//const dbrzVDEE = new dbrzVDEEncoder();
-//dbrzVDEE.initDictionary("");
-//dbrzVDEE.setInputString("text to be encoded text to be encoded text to be encoded text to be encoded");
-//dbrzVDEE.setInputString("text to be encoded text to be encoded");
-//dbrzVDEE.setInputString("texttexttexttexttexttexttexttexttexttexttexttext");
-//dbrzVDEE.setInputString("text to be encoded");
-//dbrzVDEE.encode();
+//export {dbrzVDEEncoder}

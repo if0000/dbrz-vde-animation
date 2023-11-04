@@ -15,7 +15,7 @@
 //  Basically the measurement and metrics elements sould be svg based.
 //
 
-import {dbrzVDEInterfaceObserver} from "./dbrz-vde-interface.js";
+//import {dbrzVDEInterfaceObserver} from "./dbrz-vde-interface.js";
 
 class dbrzVDEPresentation extends dbrzVDEInterfaceObserver{
 
@@ -87,4 +87,4 @@ class dbrzVDEPresentationTextual extends dbrzVDEInterfaceObserver {
 
 
 
-export {dbrzVDEPresentationInputField, dbrzVDEPresentationMetrics, dbrzVDEPresentationTextual};
+//export {dbrzVDEPresentationInputField, dbrzVDEPresentationMetrics, dbrzVDEPresentationTextual};
