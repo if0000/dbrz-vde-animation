@@ -55,7 +55,37 @@ class dbrzVDEPresentationInputField extends dbrzVDEInterfaceObserver {
   update() {
     if(arguments.length > 1) {
       this.dbrzPresentationInputField.innerHTML = "dbrzVDEPresentationInputField - topic: " + arguments[0] + ", value: " + arguments[1];
-      //console.log("dbrzVDEPresentationInputField - topic: " + arguments[0] + ", value: " + arguments[1]);
+    }
+  }
+}
+
+class dbrzVDEPresentationInputProcessing extends dbrzVDEInterfaceObserver {
+
+  constructor() {
+    super();
+    if(arguments.length > 0) {
+      if (document.getElementById(arguments[0]) != null) {
+        this.dbrzPresentationInputProcessing = document.getElementById(arguments[0]);
+      } else {
+        //default VDE container is the parent to which has to be attached
+      }
+    } else {
+      //default VDE container is the parent to which has to be attached
+    }
+
+    this.inputString;
+    this.progressStatus = 0;
+
+    this.colorizedProgress;
+  }
+
+  update() {
+    if(arguments.length > 0) {
+      if(arguments[0] == "string") {
+        this.inputString = arguments[0];
+      } else {
+        this.dbrzPresentationInputProcessing.innerHTML = "dbrzVDEPresentationInputProcessing - topic: " + arguments[0] + ", value: " + arguments[1];
+      }
     }
   }
 }
@@ -106,6 +136,8 @@ class dbrzVDEPresentationTextual extends dbrzVDEInterfaceObserver {
   }
 
 }
+
+//  Frequency charts are also beneficial
 
 
 //  

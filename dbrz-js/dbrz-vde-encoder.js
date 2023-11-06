@@ -18,7 +18,7 @@ class dbrzVDEEncoder {
 
     this.encoderReset();
 
-    // Event listener should be attached once, even if reset takes place.
+    //  Event listener should be attached once, even if reset takes place.
     this.elementEventAttached = document.getElementById("dbrzStepByStepBtn");
     this.elementEventAttached.addEventListener("click", () => {
       this.outsourcedResolve("Resolved");
@@ -108,7 +108,7 @@ class dbrzVDEEncoder {
   }
 
   encodeInAsyncEnv() {
-    // Searching for the longest fit in between the primary entries - just like the legacy LZW works, built incrementally to be able decode the encoded input.
+    //  Searching for the longest fit in between the primary entries - just like the legacy LZW works, built incrementally to be able decode the encoded input.
     if(!this.virtualMode) {
 
       if (this.checkPrimaryEntryMatch(this.temporaryEntry + this.string.charAt(this.progressCounter))) {
@@ -130,9 +130,9 @@ class dbrzVDEEncoder {
         this.checkpointDescription = "03 - Before decide if the domain is still the static part of the dictionary or the dynamic one.";
         this.notifySubs("");
 
-        // Here we can decide if we should start the virtual word search
-        // or we are still in the domain of static part.
-        // This shoul highly simplify the virtual part
+        //  Here we can decide if we should start the virtual word search
+        //  or we are still in the domain of static part.
+        //  This shoul highly simplify the virtual part
         if (this.positonMatchPointer < this.acceptedCharacters.length) {
 
           this.longestMatchingEntry = this.longestMatchingEntry + this.temporaryEntry;
@@ -162,13 +162,13 @@ class dbrzVDEEncoder {
         }
       }
     
-    // Searching for the available longest fit virtual entry starting from the longest matching primary entry.
+    //  Searching for the available longest fit virtual entry starting from the longest matching primary entry.
     } else {
 
-      // The match is over the static part of the dictionary AND the subsequent entry exists.
+      //  The match is over the static part of the dictionary AND the subsequent entry exists.
       if((this.positonMatchPointer + this.distance) < this.dictionary.length) {
 
-        // The end of the subsequent word has NOT been reached yet.
+        //  The end of the subsequent word has NOT been reached yet.
         if (this.subsEntryUnderInvestigation == undefined) {
 
           this.subsEntryUnderInvestigation = this.dictionary[(this.positonMatchPointer + this.distance)];
@@ -343,7 +343,7 @@ class dbrzVDEEncoder {
   }
 
 
-  //Simplified: for the sake of simplicity those "bytes" which are out of the set will be skipped during processing
+  //  Simplified: for the sake of simplicity those "bytes" which are out of the set will be skipped during processing
   initDictionary(acceptedChars) {
 
     if (acceptedChars.length == 0) {
@@ -424,7 +424,7 @@ class dbrzVDEEncoder {
 
     } else {
 
-      //There is not such topic to subscribe on.
+      //  There is not such topic to subscribe on.
       return -1;
 
     }
@@ -449,7 +449,7 @@ class dbrzVDEEncoder {
       }
     } else {
 
-      //There is not such topic to unsubscribe from.
+      //  There is not such topic to unsubscribe from.
       return -1;
 
     }
