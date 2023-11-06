@@ -45,7 +45,6 @@ class dbrzVDEEncoder {
     this.stepBystep = true;
     this.elementEventAttached = document.getElementById("dbrzStepByStepBtn");
     this.promise;
-    //this.outsourcedResolve;
     this.elementEventAttached.addEventListener("click", () => {
       this.outsourcedResolve("Resolved");
     });
