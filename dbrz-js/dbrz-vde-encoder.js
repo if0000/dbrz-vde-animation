@@ -45,7 +45,10 @@ class dbrzVDEEncoder {
     this.stepBystep = true;
     this.elementEventAttached = document.getElementById("dbrzStepByStepBtn");
     this.promise;
-    this.outsourcedResolve;
+    //this.outsourcedResolve;
+    this.elementEventAttached.addEventListener("click", () => {
+      this.outsourcedResolve("Resolved");
+    });
 
     this.j = 0;
     this.subsEntryUnderInvestigation = "";
@@ -70,11 +73,10 @@ class dbrzVDEEncoder {
     this.encodeController();
   }
 
-  async runScript() {
-    await this.promise;
+  async extLoopSync() {
+    await new Promise((resolve, reject) => {this.outsourcedResolve = resolve;});
     this.encodeInAsyncEnv();
     this.progressCounter++
-    this.elementEventAttached.removeEventListener("click", this.outsourcedResolve());
     if(this.progressCounter < this.string.length) {
       this.encodeController();
     } else {
@@ -84,13 +86,7 @@ class dbrzVDEEncoder {
 
   encodeController() {
     if(this.stepBystep) {
-      this.promise = new Promise((resolve, reject) => { 
-        this.outsourcedResolve = resolve;
-      });
-      this.elementEventAttached.addEventListener("click", () => {
-        this.outsourcedResolve("Resolved");
-      });
-      this.runScript();
+      this.extLoopSync();
     } else {
       for(this.progressCounter = 0; this.progressCounter < this.string.length; this.progressCounter++) {
         this.encodeInAsyncEnv()
