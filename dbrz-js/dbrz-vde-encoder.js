@@ -18,7 +18,8 @@ class dbrzVDEEncoder {
 
     this.encoderReset();
 
-    // Event listener should be attached once, even if reset takes place;
+    // Event listener should be attached once, even if reset takes place.
+    this.elementEventAttached = document.getElementById("dbrzStepByStepBtn");
     this.elementEventAttached.addEventListener("click", () => {
       this.outsourcedResolve("Resolved");
     });
@@ -54,8 +55,6 @@ class dbrzVDEEncoder {
     this.presetObservables();
 
     this.stepBystep = true;
-    this.elementEventAttached = document.getElementById("dbrzStepByStepBtn");
-    this.promise;
 
     this.j = 0;
     this.subsEntryUnderInvestigation = "";
@@ -86,10 +85,6 @@ class dbrzVDEEncoder {
     if(this.progressCounter < this.string.length) {
 
       this.encodeController();
-
-    } else {
-
-      console.log("over");
 
     }
 
@@ -143,18 +138,20 @@ class dbrzVDEEncoder {
           this.longestMatchingEntry = this.longestMatchingEntry + this.temporaryEntry;
 
 
-        if(!this.dictionaryAux.has(this.longestMatchingEntry)) {
+          if(!this.dictionaryAux.has(this.longestMatchingEntry)) {
 
-          this.nextEntryPos = this.dictionary.length;
-          this.dictionary[this.nextEntryPos] = this.longestMatchingEntry;
-          this.dictionaryAux.set(this.longestMatchingEntry, this.nextEntryPos);
+            this.nextEntryPos = this.dictionary.length;
+            this.dictionary[this.nextEntryPos] = this.longestMatchingEntry;
+            this.dictionaryAux.set(this.longestMatchingEntry, this.nextEntryPos);
 
-        }
+          }
 
           this.encodedId = this.positonMatchPointer;
 
           this.checkpointDescription = "04 - Static part: two letters long word is written into the dictionary.";
           this.notifySubs("");
+
+          this.encodedId = -1;
 
         } else {
 
