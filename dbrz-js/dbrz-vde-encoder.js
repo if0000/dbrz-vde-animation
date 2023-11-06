@@ -16,6 +16,18 @@
 class dbrzVDEEncoder {
   constructor() {
 
+    this.encoderReset();
+
+    // Event listener should be attached once, even if reset takes place;
+    this.elementEventAttached.addEventListener("click", () => {
+      this.outsourcedResolve("Resolved");
+    });
+
+    
+  }
+
+  encoderReset() {
+
     this.acceptedCharacters;
     this.flushDictionary = true;
 
@@ -30,7 +42,6 @@ class dbrzVDEEncoder {
 
     this.string = "";
     this.progressCounter = 0;
-    this.progressString = "";
 
     this.nextEntryPos = 0;
     this.dictionary = [];
@@ -45,51 +56,59 @@ class dbrzVDEEncoder {
     this.stepBystep = true;
     this.elementEventAttached = document.getElementById("dbrzStepByStepBtn");
     this.promise;
-    this.elementEventAttached.addEventListener("click", () => {
-      this.outsourcedResolve("Resolved");
-    });
 
     this.j = 0;
     this.subsEntryUnderInvestigation = "";
-    
+
   }
 
   setInputString(input) {
 
-    this.string = input;
-    
+    this.string = input;    
     this.notifySubs(["string"]);
 
   }
 
-  setOutputString() {
-
-  }
-
   encode(stepBystep) {
+
     this.stepBystep = stepBystep;
     this.progressCounter = 0;
     this.encodeController();
+
   }
 
   async extLoopSync() {
+
     await new Promise((resolve, reject) => {this.outsourcedResolve = resolve;});
     this.encodeInAsyncEnv();
-    this.progressCounter++
+    this.progressCounter++;
+
     if(this.progressCounter < this.string.length) {
+
       this.encodeController();
+
     } else {
+
       console.log("over");
+
     }
+
   }
 
   encodeController() {
+
     if(this.stepBystep) {
+
       this.extLoopSync();
+
     } else {
+
       for(this.progressCounter = 0; this.progressCounter < this.string.length; this.progressCounter++) {
-        this.encodeInAsyncEnv()
+
+        this.encodeInAsyncEnv();
+
       } 
+
     }
   }
 
@@ -191,6 +210,8 @@ class dbrzVDEEncoder {
             this.checkpointDescription = "06 - No more character match during virtual word composition. Index issue and dictionary update.";
             this.notifySubs("");
 
+            this.encodedId = -1;
+
             this.longestMatchingEntry = "";
             this.temporaryEntry = this.string.charAt(this.progressCounter);
             this.subsEntryUnderInvestigation = undefined;
@@ -239,6 +260,8 @@ class dbrzVDEEncoder {
 
         this.checkpointDescription = "09 - No more possibility to chaining, since no more primary entries in the dictionary.";
         this.notifySubs("");
+
+        this.encodedId = -1;
         
         this.longestMatchingEntry = "";
         this.temporaryEntry = this.string.charAt(this.progressCounter);
@@ -276,6 +299,8 @@ class dbrzVDEEncoder {
 
         this.checkpointDescription = "11 - End of string but the state variables are not empty - after first swap and index calculation.";
         this.notifySubs("");
+
+        this.encodedId = -1;
         
         this.longestMatchingEntry = "";
         this.temporaryEntry = this.string.charAt(this.progressCounter);
@@ -301,6 +326,8 @@ class dbrzVDEEncoder {
 
           this.checkpointDescription = "14 - End of string and everything is empty";
           this.notifySubs("");
+
+          this.encodedId = -1;
 
         } else {
 
@@ -392,12 +419,17 @@ class dbrzVDEEncoder {
   //  Part of the Observer - external IF
   //
   subscribe(topic, subscriber) {
+
     if(this.listOfObservedValues.has(topic)) {
+
       this.listOfObservedValues.get(topic).add(subscriber);
       return 0;
+
     } else {
+
       //There is not such topic to subscribe on.
       return -1;
+
     }
   }
 
@@ -405,16 +437,24 @@ class dbrzVDEEncoder {
   //  Part of the Observer - external IF
   //
   unsubscribe(topic, subscriber) {
+
     if(this.listOfObservedValues.has(topic)) {
+
       if(this.listOfObservedValues.get(topic).has(subscriber)) {
+
         this.listOfObservedValues.get(topic).delete(subscriber);
         return 0;
+
       } else {
-        return -1;  
+
+        return -1;
+
       }
     } else {
+
       //There is not such topic to unsubscribe from.
       return -1;
+
     }
   }
 
@@ -423,24 +463,34 @@ class dbrzVDEEncoder {
   //  Possible to filter to which topics are observed at the given check point.
   //
   notifySubs(filterSetParams) {
+
     let filterSet;
+
     if("" != filterSetParams) {
+
       filterSet = new Set(filterSetParams);
+
     } else {
+
       filterSet = new Set(['checkpointDescription', 'progressCounter', 'string', 'distance', 'temporaryEntry', 'longestMatchingEntry', 'positionMatchPointer', 'encodedId', 'dictionary']);
+
     }
 
     for (const mapEntry of this.listOfObservedValues.entries()) {
+
       if(filterSet.has(mapEntry[0])) {
+
         if(mapEntry[1].size > 0) {
+
           for (const setEntry of mapEntry[1]) {
+
             setEntry.update(mapEntry[0], this[mapEntry[0]]);
+
           }
         }
       }
     }
   }
-
 }
 
 //export {dbrzVDEEncoder}
