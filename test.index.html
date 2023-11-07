@@ -4,8 +4,32 @@
   <title>Roni Zongor / TECH</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="vendor.css">
+  <link rel="stylesheet" href="css-dbrz/dbrz-css.css">
 </head>
 <body>
+  <!--Start of main bootstrap container-->
+  <div class="container-fluid g-0 px-0 mx-auto border border-0 border-danger">
+    <div id="row-01" class="row g-0 border border-0 border-danger">
+      <div id="dbrzVDEPresentationInputString" class="col-12 dbrz-vde-text dbrz-vde-input">
+      </div>
+      <div id="dbrzVDEPresentationInputField" class="col-12 dbrz-vde-text dbrz-vde-input">
+      </div>
+    </div>
+    <div id="row-02" class="row g-0 border border-0 border-danger">
+      <div id="dbrzVDEPresentationDictionary" class="col-12 col-lg-6">
+      </div>
+      <div id="dbrzVDEPresentationInputProcessing" class="col-12 col-lg-6">
+      </div>
+    </div>
+    <div id="row-03" class="row g-0 border border-0 border-danger">
+      <div id="dbrzVDEPresentationOutput" class="col-12 col-lg-6">
+      </div>
+      <div id="dbrzVDEPresentationMeasurement" class="col-12 col-lg-6">
+      </div>
+    </div>
+  </div>
+  <!--
   <div class="dbrz-vde-container">
     <div id="dbrzVDEPresentationInputString" class="dbrz-vde-text dbrz-vde-input"></div>
     <div id="dbrzVDEPresentationInputField" class="dbrz-vde-text dbrz-vde-input"></div>
@@ -14,7 +38,10 @@
     <div id="dbrzVDEPresentationOutput" class="dbrz-vde-text"></div>
     <div id="dbrzVDEPresentationMeasurement" class="dbrz-vde-chart"></div>
   </div>
+  -->
   <button id="dbrzStepByStepBtn">click me</button>
+  <!--Bundled Bootstrap-->
+  <script src="vendor.js"></script>
   <script src="dbrz-js/dbrz-vde-interface.js"></script>
   <script src="dbrz-js/dbrz-vde-encoder.js"></script>
   <script src="dbrz-js/dbrz-vde-presentation.js"></script>
