@@ -71,40 +71,20 @@ class dbrzVDEEncoder {
   encode(stepBystep) {
 
     this.stepBystep = stepBystep;
-    this.progressCounter = 0;
     this.encodeController();
 
   }
 
-  async extLoopSync() {
+  async encodeController() {
 
-    await new Promise((resolve, reject) => {this.outsourcedResolve = resolve;});
-    this.encodeInAsyncEnv();
-    this.progressCounter++;
-
-    if(this.progressCounter < this.string.length) {
-
-      this.encodeController();
-
-    }
-
-  }
-
-  encodeController() {
-
-    if(this.stepBystep) {
-
-      this.extLoopSync();
-
-    } else {
-
-      for(this.progressCounter = 0; this.progressCounter < this.string.length; this.progressCounter++) {
-
+    for(this.progressCounter = 0; this.progressCounter < this.string.length; this.progressCounter++) {
+      if(this.stepBystep) {
+        await new Promise((resolve, reject) => {this.outsourcedResolve = resolve;});
         this.encodeInAsyncEnv();
-
-      } 
-
-    }
+      } else {
+        this.encodeInAsyncEnv();
+      }
+    } 
   }
 
   encodeInAsyncEnv() {
