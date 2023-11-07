@@ -21,7 +21,9 @@ class dbrzVDEEncoder {
     //  Event listener should be attached once, even if reset takes place.
     this.elementEventAttached = document.getElementById("dbrzStepByStepBtn");
     this.elementEventAttached.addEventListener("click", () => {
-      this.outsourcedResolve("Resolved");
+      if(typeof this.outsourcedResolve === "function") {
+        this.outsourcedResolve("Resolved");
+      }
     });
 
     
