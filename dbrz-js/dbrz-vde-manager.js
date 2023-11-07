@@ -36,7 +36,7 @@ class dbrzVDEManager {
 
     this.dbrzVDEE.setInputString("texttexttexttexttexttexttexttexttexttexttexttext");
     this.dbrzVDEE.unsubscribe('string', this.dbrzVDEPTInputProcessing);
-    this.dbrzVDEE.encode(true);
+    this.dbrzVDEE.encode(false);
   }
 }
 

@@ -84,6 +84,7 @@ class dbrzVDEEncoder {
         await new Promise((resolve, reject) => {this.outsourcedResolve = resolve;});
         this.encodeInAsyncEnv();
       } else {
+        await new Promise((resolve, reject) => {setTimeout(resolve, 500)});
         this.encodeInAsyncEnv();
       }
     } 
