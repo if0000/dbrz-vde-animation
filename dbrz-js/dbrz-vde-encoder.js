@@ -26,11 +26,73 @@ class dbrzVDEEncoder {
       }
     });
 
+    this.elementResetEventAttached = document.getElementById("dbrzResetBtn");
+    this.elementResetEventAttached.addEventListener("click", () => {
+      this.resetWithNewInput();
+    });
     
+    this.elemntInputField = document.getElementById("dbrzVDEPresentationInputField");
+
+    this.elementAutomaticExecution = document.getElementById("dbrzAutomaticExecution");
+  }
+
+  reset() {
+
+  }
+
+  resetWithNewInput() {
+    this.encoderPartialReset();
+    this.initDictionary("");
+    this.setInputString(this.elemntInputField.value);
+    this.checkpointDescription = "00 - Reset.";
+    if(this.elementAutomaticExecution.checked == true) {
+      this.encode(false);
+    } else {
+      this.encode(true);
+    }
+  }
+
+  //
+  // Preserves the already subscribed subscribers.
+  // Besides that everything else is cleared.
+  //
+  encoderPartialReset() {
+
+    //#FIXME
+    //console.log("encoderPartialReset called");
+
+    this.acceptedCharacters;
+    this.flushDictionary = true;
+
+    this.positonMatchPointer = 0;
+    this.distance = 0;
+
+    this.longestMatchingEntry;
+    this.temporaryEntry = "";
+    this.virtualMode = false;
+
+    this.checkpointDescription = "";
+
+    this.string = "";
+    this.progressCounter = 0;
+
+    this.nextEntryPos = 0;
+    this.dictionary = [];
+    this.dictionaryAux = new Map();
+
+    this.relativeDist = -1;
+    this.encodedId = -1;
+
+    this.stepBystep = true;
+
+    this.j = 0;
+    this.subsEntryUnderInvestigation = "";
   }
 
   encoderReset() {
 
+    //#FIXME
+    //console.log("encoderReset called");
     this.acceptedCharacters;
     this.flushDictionary = true;
 
@@ -65,6 +127,8 @@ class dbrzVDEEncoder {
 
   setInputString(input) {
 
+    //#FIXME
+    //console.log("setInputString() called with input: " + input);
     this.string = input;    
     this.notifySubs(["string"]);
 
@@ -99,19 +163,19 @@ class dbrzVDEEncoder {
         this.temporaryEntry = this.temporaryEntry + this.string.charAt(this.progressCounter);
 
         this.checkpointDescription = "01 - Primary entry match.";
-        this.notifySubs("");
+        this.notifySubs(['checkpointDescription', 'progressCounter', 'distance', 'temporaryEntry', 'longestMatchingEntry', 'positionMatchPointer', 'encodedId', 'dictionary']);
 
       } else {
 
         this.checkpointDescription = "02 - One character longer than the longest primary entry.";
-        this.notifySubs("");
+        this.notifySubs(['checkpointDescription', 'progressCounter', 'distance', 'temporaryEntry', 'longestMatchingEntry', 'positionMatchPointer', 'encodedId', 'dictionary']);
 
         this.longestMatchingEntry = this.temporaryEntry;
         this.positonMatchPointer = this.dictionaryAux.get(this.longestMatchingEntry);
         this.temporaryEntry = this.string.charAt(this.progressCounter);
 
         this.checkpointDescription = "03 - Before decide if the domain is still the static part of the dictionary or the dynamic one.";
-        this.notifySubs("");
+        this.notifySubs(['checkpointDescription', 'progressCounter', 'distance', 'temporaryEntry', 'longestMatchingEntry', 'positionMatchPointer', 'encodedId', 'dictionary']);
 
         //  Here we can decide if we should start the virtual word search
         //  or we are still in the domain of static part.
@@ -132,7 +196,7 @@ class dbrzVDEEncoder {
           this.encodedId = this.positonMatchPointer;
 
           this.checkpointDescription = "04 - Static part: two letters long word is written into the dictionary.";
-          this.notifySubs("");
+          this.notifySubs(['checkpointDescription', 'progressCounter', 'distance', 'temporaryEntry', 'longestMatchingEntry', 'positionMatchPointer', 'encodedId', 'dictionary']);
 
           this.encodedId = -1;
 
@@ -168,7 +232,7 @@ class dbrzVDEEncoder {
           if (this.subsEntryUnderInvestigation.charAt(this.j) == this.string.charAt(this.progressCounter)) {
 
             this.checkpointDescription = "05 - Character match during the examination of chaining of subsequent primary words.";
-            this.notifySubs("");
+            this.notifySubs(['checkpointDescription', 'progressCounter', 'distance', 'temporaryEntry', 'longestMatchingEntry', 'positionMatchPointer', 'encodedId', 'dictionary']);
 
             this.j = this.j + 1;
 
@@ -188,7 +252,7 @@ class dbrzVDEEncoder {
             this.calculateVirtualIndex();
 
             this.checkpointDescription = "06 - No more character match during virtual word composition. Index issue and dictionary update.";
-            this.notifySubs("");
+            this.notifySubs(['checkpointDescription', 'progressCounter', 'distance', 'temporaryEntry', 'longestMatchingEntry', 'positionMatchPointer', 'encodedId', 'dictionary']);
 
             this.encodedId = -1;
 
@@ -208,7 +272,7 @@ class dbrzVDEEncoder {
         } else {
 
           this.checkpointDescription = "07 - End of a subsequent word with full match. Setup to check for the next one.";
-          this.notifySubs("");
+          this.notifySubs(['checkpointDescription', 'progressCounter', 'distance', 'temporaryEntry', 'longestMatchingEntry', 'positionMatchPointer', 'encodedId', 'dictionary']);
 
           this.longestMatchingEntry = this.longestMatchingEntry + this.temporaryEntry;
           this.temporaryEntry = this.string.charAt(this.progressCounter);
@@ -217,7 +281,7 @@ class dbrzVDEEncoder {
           this.subsEntryUnderInvestigation = undefined;
 
           this.checkpointDescription = "08 - State after setup.";
-          this.notifySubs("");
+          this.notifySubs(['checkpointDescription', 'progressCounter', 'distance', 'temporaryEntry', 'longestMatchingEntry', 'positionMatchPointer', 'encodedId', 'dictionary']);
 
         }
 
@@ -239,7 +303,7 @@ class dbrzVDEEncoder {
         this.calculateVirtualIndex();
 
         this.checkpointDescription = "09 - No more possibility to chaining, since no more primary entries in the dictionary.";
-        this.notifySubs("");
+        this.notifySubs(['checkpointDescription', 'progressCounter', 'distance', 'temporaryEntry', 'longestMatchingEntry', 'positionMatchPointer', 'encodedId', 'dictionary']);
 
         this.encodedId = -1;
         
@@ -265,7 +329,7 @@ class dbrzVDEEncoder {
         }
 
         this.checkpointDescription = "10 - End of string but the state variables are not empty - after progressCounter change.";
-        this.notifySubs("");
+        this.notifySubs(['checkpointDescription', 'progressCounter', 'distance', 'temporaryEntry', 'longestMatchingEntry', 'positionMatchPointer', 'encodedId', 'dictionary']);
 
         if(!this.dictionaryAux.has(this.longestMatchingEntry)) {
 
@@ -278,7 +342,7 @@ class dbrzVDEEncoder {
         this.calculateVirtualIndex();
 
         this.checkpointDescription = "11 - End of string but the state variables are not empty - after first swap and index calculation.";
-        this.notifySubs("");
+        this.notifySubs(['checkpointDescription', 'progressCounter', 'distance', 'temporaryEntry', 'longestMatchingEntry', 'positionMatchPointer', 'encodedId', 'dictionary']);
 
         this.encodedId = -1;
         
@@ -290,14 +354,14 @@ class dbrzVDEEncoder {
         this.virtualMode = false;
 
         this.checkpointDescription = "12 - End of string but the state variables are not empty - after second swap.";
-        this.notifySubs("");
+        this.notifySubs(['checkpointDescription', 'progressCounter', 'distance', 'temporaryEntry', 'longestMatchingEntry', 'positionMatchPointer', 'encodedId', 'dictionary']);
 
       } else {
 
         if( this.temporaryEntry != 0 ) {
 
           this.checkpointDescription = "13 - End of string but the state variables are not empty";
-          this.notifySubs("");
+          this.notifySubs(['checkpointDescription', 'progressCounter', 'distance', 'temporaryEntry', 'longestMatchingEntry', 'positionMatchPointer', 'encodedId', 'dictionary']);
 
           this.positonMatchPointer = this.dictionaryAux.get(this.temporaryEntry);
           this.calculateVirtualIndex();
@@ -305,7 +369,7 @@ class dbrzVDEEncoder {
           this.temporaryEntry = "";
 
           this.checkpointDescription = "14 - End of string and everything is empty";
-          this.notifySubs("");
+          this.notifySubs(['checkpointDescription', 'progressCounter', 'distance', 'temporaryEntry', 'longestMatchingEntry', 'positionMatchPointer', 'encodedId', 'dictionary']);
 
           this.encodedId = -1;
 
@@ -331,7 +395,7 @@ class dbrzVDEEncoder {
 
     if (acceptedChars.length == 0) {
 
-      this.acceptedCharacters = "0123456789aábcdeéfghiíjklmnoópqrstuúüűvwxyzAÁBCDEÉFGHIÍJKLMNOÓPQRSTUÚÜŰVWXYZ ,.!\"'-@\n";
+      this.acceptedCharacters = "0123456789aábcdeéfghiíjklmnoóöőpqrstuúüűvwxyzAÁBCDEÉFGHIÍJKLMNOÓÖŐPQRSTUÚÜŰVWXYZ ,.!\"'-@\n";
 
     } else {
 

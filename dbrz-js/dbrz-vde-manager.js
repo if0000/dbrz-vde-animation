@@ -34,9 +34,13 @@ class dbrzVDEManager {
     this.dbrzVDEE.subscribe('string', this.dbrzVDEPIP);
     this.dbrzVDEE.subscribe('progressCounter', this.dbrzVDEPIP);
 
-    this.dbrzVDEE.setInputString("texttexttexttexttexttexttexttexttexttexttexttext");
+    //
+    //  These methods should be wire out to the UI
+    //
+    this.dbrzVDEE.setInputString("hi i am an input string to be encoded hi i am an input string to be encoded hi i am an input string to be encoded");
+    //this.dbrzVDEE.setInputString("texttexttexttexttexttexttexttexttexttexttexttext");
     this.dbrzVDEE.unsubscribe('string', this.dbrzVDEPTInputProcessing);
-    this.dbrzVDEE.encode(false);
+    this.dbrzVDEE.encode(true);
   }
 }
 

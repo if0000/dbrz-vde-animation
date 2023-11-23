@@ -92,11 +92,11 @@ class dbrzVDEPresentationInputProcessing extends dbrzVDEInterfaceObserver {
 
 class dbrzVDEPresentationMetrics extends dbrzVDEInterfaceObserver {
 
-  constructor(svg) {
+  constructor() {
     super();
     if(arguments.length > 0) {
       if (document.getElementById(arguments[0]) != null) {
-        this.svg = document.getElementById(svg);
+        this.svg = document.getElementById(arguments[0]);
       } else {
         //default VDE container is the parent to which has to be attached
       }
@@ -130,8 +130,8 @@ class dbrzVDEPresentationTextual extends dbrzVDEInterfaceObserver {
 
   update() {
     if(arguments.length > 1) {
-      this.dbrzPresentationTextualContainer.innerHTML = "dbrzVDEPresentationTextual - topic: " + arguments[0] + ", value: " + arguments[1];
-      //console.log("dbrzVDEPresentationTextual - topic: " + arguments[0] + ", value: " + arguments[1]);
+      this.dbrzPresentationTextualContainer.innerHTML = arguments[1];
+      //this.dbrzPresentationTextualContainer.innerHTML = "dbrzVDEPresentationTextual - topic: " + arguments[0] + ", value: " + arguments[1];
     }
   }
 

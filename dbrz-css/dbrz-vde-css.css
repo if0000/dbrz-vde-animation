@@ -1,0 +1,7 @@
+.dbrz-vde-input {
+  min-height: 10vh;
+}
+
+dbrz-vde-fix-height-container {
+  max-height: 10vh;
+}
