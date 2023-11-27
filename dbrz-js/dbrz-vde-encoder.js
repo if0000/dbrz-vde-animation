@@ -36,9 +36,6 @@ class dbrzVDEEncoder {
     this.elementAutomaticExecution = document.getElementById("dbrzAutomaticExecution");
   }
 
-  reset() {
-
-  }
 
   resetWithNewInput() {
     this.encoderPartialReset();
@@ -58,9 +55,6 @@ class dbrzVDEEncoder {
   //
   encoderPartialReset() {
 
-    //#FIXME
-    //console.log("encoderPartialReset called");
-
     this.acceptedCharacters;
     this.flushDictionary = true;
 
@@ -69,6 +63,7 @@ class dbrzVDEEncoder {
 
     this.longestMatchingEntry;
     this.temporaryEntry = "";
+    this.dynamicEntry = "";
     this.virtualMode = false;
 
     this.checkpointDescription = "";
@@ -79,6 +74,8 @@ class dbrzVDEEncoder {
     this.nextEntryPos = 0;
     this.dictionary = [];
     this.dictionaryAux = new Map();
+    this.reset = "";
+    this.notifySubs(['reset']);
 
     this.relativeDist = -1;
     this.encodedId = -1;
@@ -89,10 +86,9 @@ class dbrzVDEEncoder {
     this.subsEntryUnderInvestigation = "";
   }
 
+
   encoderReset() {
 
-    //#FIXME
-    //console.log("encoderReset called");
     this.acceptedCharacters;
     this.flushDictionary = true;
 
@@ -101,6 +97,7 @@ class dbrzVDEEncoder {
 
     this.longestMatchingEntry;
     this.temporaryEntry = "";
+    this.dynamicEntry = "";
     this.virtualMode = false;
 
     this.checkpointDescription = "";
@@ -125,14 +122,14 @@ class dbrzVDEEncoder {
 
   }
 
+
   setInputString(input) {
 
-    //#FIXME
-    //console.log("setInputString() called with input: " + input);
     this.string = input;    
     this.notifySubs(["string"]);
 
   }
+
 
   encode(stepBystep) {
 
@@ -141,6 +138,7 @@ class dbrzVDEEncoder {
 
   }
 
+
   async encodeController() {
 
     for(this.progressCounter = 0; this.progressCounter < this.string.length; this.progressCounter++) {
@@ -148,11 +146,13 @@ class dbrzVDEEncoder {
         await new Promise((resolve, reject) => {this.outsourcedResolve = resolve;});
         this.encodeInAsyncEnv();
       } else {
-        await new Promise((resolve, reject) => {setTimeout(resolve, 500)});
+        await new Promise((resolve, reject) => {setTimeout(resolve, 50)});
+        //await new Promise((resolve, reject) => {setTimeout(resolve, 500)});
         this.encodeInAsyncEnv();
       }
     } 
   }
+
 
   encodeInAsyncEnv() {
     //  Searching for the longest fit in between the primary entries - just like the legacy LZW works, built incrementally to be able decode the encoded input.
@@ -163,23 +163,23 @@ class dbrzVDEEncoder {
         this.temporaryEntry = this.temporaryEntry + this.string.charAt(this.progressCounter);
 
         this.checkpointDescription = "01 - Primary entry match.";
-        this.notifySubs(['checkpointDescription', 'progressCounter', 'distance', 'temporaryEntry', 'longestMatchingEntry', 'positionMatchPointer', 'encodedId', 'dictionary']);
+        this.notifySubs(['checkpointDescription', 'progressCounter', 'distance', 'temporaryEntry', 'longestMatchingEntry', 'positionMatchPointer', 'encodedId']);
 
       } else {
 
         this.checkpointDescription = "02 - One character longer than the longest primary entry.";
-        this.notifySubs(['checkpointDescription', 'progressCounter', 'distance', 'temporaryEntry', 'longestMatchingEntry', 'positionMatchPointer', 'encodedId', 'dictionary']);
+        this.notifySubs(['checkpointDescription', 'progressCounter', 'distance', 'temporaryEntry', 'longestMatchingEntry', 'positionMatchPointer', 'encodedId']);
 
         this.longestMatchingEntry = this.temporaryEntry;
         this.positonMatchPointer = this.dictionaryAux.get(this.longestMatchingEntry);
         this.temporaryEntry = this.string.charAt(this.progressCounter);
 
         this.checkpointDescription = "03 - Before decide if the domain is still the static part of the dictionary or the dynamic one.";
-        this.notifySubs(['checkpointDescription', 'progressCounter', 'distance', 'temporaryEntry', 'longestMatchingEntry', 'positionMatchPointer', 'encodedId', 'dictionary']);
+        this.notifySubs(['checkpointDescription', 'progressCounter', 'distance', 'temporaryEntry', 'longestMatchingEntry', 'positionMatchPointer', 'encodedId']);
 
         //  Here we can decide if we should start the virtual word search
         //  or we are still in the domain of static part.
-        //  This shoul highly simplify the virtual part
+        //  This should highly simplify the virtual part
         if (this.positonMatchPointer < this.acceptedCharacters.length) {
 
           this.longestMatchingEntry = this.longestMatchingEntry + this.temporaryEntry;
@@ -190,13 +190,15 @@ class dbrzVDEEncoder {
             this.nextEntryPos = this.dictionary.length;
             this.dictionary[this.nextEntryPos] = this.longestMatchingEntry;
             this.dictionaryAux.set(this.longestMatchingEntry, this.nextEntryPos);
+            this.dynamicEntry = this.longestMatchingEntry;
+            this.notifySubs(['dynamicEntry']);
 
           }
 
           this.encodedId = this.positonMatchPointer;
 
           this.checkpointDescription = "04 - Static part: two letters long word is written into the dictionary.";
-          this.notifySubs(['checkpointDescription', 'progressCounter', 'distance', 'temporaryEntry', 'longestMatchingEntry', 'positionMatchPointer', 'encodedId', 'dictionary']);
+          this.notifySubs(['checkpointDescription', 'progressCounter', 'distance', 'temporaryEntry', 'longestMatchingEntry', 'positionMatchPointer', 'encodedId']);
 
           this.encodedId = -1;
 
@@ -232,7 +234,7 @@ class dbrzVDEEncoder {
           if (this.subsEntryUnderInvestigation.charAt(this.j) == this.string.charAt(this.progressCounter)) {
 
             this.checkpointDescription = "05 - Character match during the examination of chaining of subsequent primary words.";
-            this.notifySubs(['checkpointDescription', 'progressCounter', 'distance', 'temporaryEntry', 'longestMatchingEntry', 'positionMatchPointer', 'encodedId', 'dictionary']);
+            this.notifySubs(['checkpointDescription', 'progressCounter', 'distance', 'temporaryEntry', 'longestMatchingEntry', 'positionMatchPointer', 'encodedId']);
 
             this.j = this.j + 1;
 
@@ -246,13 +248,15 @@ class dbrzVDEEncoder {
               this.nextEntryPos = this.dictionary.length;
               this.dictionary[this.nextEntryPos] = this.longestMatchingEntry;
               this.dictionaryAux.set(this.longestMatchingEntry, this.nextEntryPos);
+              this.dynamicEntry = this.longestMatchingEntry;
+              this.notifySubs(['dynamicEntry']);
   
             }
 
             this.calculateVirtualIndex();
 
             this.checkpointDescription = "06 - No more character match during virtual word composition. Index issue and dictionary update.";
-            this.notifySubs(['checkpointDescription', 'progressCounter', 'distance', 'temporaryEntry', 'longestMatchingEntry', 'positionMatchPointer', 'encodedId', 'dictionary']);
+            this.notifySubs(['checkpointDescription', 'progressCounter', 'distance', 'temporaryEntry', 'longestMatchingEntry', 'positionMatchPointer', 'encodedId']);
 
             this.encodedId = -1;
 
@@ -272,7 +276,7 @@ class dbrzVDEEncoder {
         } else {
 
           this.checkpointDescription = "07 - End of a subsequent word with full match. Setup to check for the next one.";
-          this.notifySubs(['checkpointDescription', 'progressCounter', 'distance', 'temporaryEntry', 'longestMatchingEntry', 'positionMatchPointer', 'encodedId', 'dictionary']);
+          this.notifySubs(['checkpointDescription', 'progressCounter', 'distance', 'temporaryEntry', 'longestMatchingEntry', 'positionMatchPointer', 'encodedId']);
 
           this.longestMatchingEntry = this.longestMatchingEntry + this.temporaryEntry;
           this.temporaryEntry = this.string.charAt(this.progressCounter);
@@ -281,7 +285,7 @@ class dbrzVDEEncoder {
           this.subsEntryUnderInvestigation = undefined;
 
           this.checkpointDescription = "08 - State after setup.";
-          this.notifySubs(['checkpointDescription', 'progressCounter', 'distance', 'temporaryEntry', 'longestMatchingEntry', 'positionMatchPointer', 'encodedId', 'dictionary']);
+          this.notifySubs(['checkpointDescription', 'progressCounter', 'distance', 'temporaryEntry', 'longestMatchingEntry', 'positionMatchPointer', 'encodedId']);
 
         }
 
@@ -297,13 +301,15 @@ class dbrzVDEEncoder {
           this.nextEntryPos = this.dictionary.length;
           this.dictionary[this.nextEntryPos] = this.longestMatchingEntry;
           this.dictionaryAux.set(this.longestMatchingEntry, this.nextEntryPos);
+          this.dynamicEntry = this.longestMatchingEntry;
+          this.notifySubs(['dynamicEntry']);
 
         }
 
         this.calculateVirtualIndex();
 
         this.checkpointDescription = "09 - No more possibility to chaining, since no more primary entries in the dictionary.";
-        this.notifySubs(['checkpointDescription', 'progressCounter', 'distance', 'temporaryEntry', 'longestMatchingEntry', 'positionMatchPointer', 'encodedId', 'dictionary']);
+        this.notifySubs(['checkpointDescription', 'progressCounter', 'distance', 'temporaryEntry', 'longestMatchingEntry', 'positionMatchPointer', 'encodedId']);
 
         this.encodedId = -1;
         
@@ -329,20 +335,22 @@ class dbrzVDEEncoder {
         }
 
         this.checkpointDescription = "10 - End of string but the state variables are not empty - after progressCounter change.";
-        this.notifySubs(['checkpointDescription', 'progressCounter', 'distance', 'temporaryEntry', 'longestMatchingEntry', 'positionMatchPointer', 'encodedId', 'dictionary']);
+        this.notifySubs(['checkpointDescription', 'progressCounter', 'distance', 'temporaryEntry', 'longestMatchingEntry', 'positionMatchPointer', 'encodedId']);
 
         if(!this.dictionaryAux.has(this.longestMatchingEntry)) {
 
           this.nextEntryPos = this.dictionary.length;
           this.dictionary[this.nextEntryPos] = this.longestMatchingEntry;
           this.dictionaryAux.set(this.longestMatchingEntry, this.nextEntryPos);
+          this.dynamicEntry = this.longestMatchingEntry;
+          this.notifySubs(['dynamicEntry']);
 
         }
 
         this.calculateVirtualIndex();
 
         this.checkpointDescription = "11 - End of string but the state variables are not empty - after first swap and index calculation.";
-        this.notifySubs(['checkpointDescription', 'progressCounter', 'distance', 'temporaryEntry', 'longestMatchingEntry', 'positionMatchPointer', 'encodedId', 'dictionary']);
+        this.notifySubs(['checkpointDescription', 'progressCounter', 'distance', 'temporaryEntry', 'longestMatchingEntry', 'positionMatchPointer', 'encodedId']);
 
         this.encodedId = -1;
         
@@ -354,14 +362,14 @@ class dbrzVDEEncoder {
         this.virtualMode = false;
 
         this.checkpointDescription = "12 - End of string but the state variables are not empty - after second swap.";
-        this.notifySubs(['checkpointDescription', 'progressCounter', 'distance', 'temporaryEntry', 'longestMatchingEntry', 'positionMatchPointer', 'encodedId', 'dictionary']);
+        this.notifySubs(['checkpointDescription', 'progressCounter', 'distance', 'temporaryEntry', 'longestMatchingEntry', 'positionMatchPointer', 'encodedId']);
 
       } else {
 
         if( this.temporaryEntry != 0 ) {
 
           this.checkpointDescription = "13 - End of string but the state variables are not empty";
-          this.notifySubs(['checkpointDescription', 'progressCounter', 'distance', 'temporaryEntry', 'longestMatchingEntry', 'positionMatchPointer', 'encodedId', 'dictionary']);
+          this.notifySubs(['checkpointDescription', 'progressCounter', 'distance', 'temporaryEntry', 'longestMatchingEntry', 'positionMatchPointer', 'encodedId']);
 
           this.positonMatchPointer = this.dictionaryAux.get(this.temporaryEntry);
           this.calculateVirtualIndex();
@@ -369,13 +377,13 @@ class dbrzVDEEncoder {
           this.temporaryEntry = "";
 
           this.checkpointDescription = "14 - End of string and everything is empty";
-          this.notifySubs(['checkpointDescription', 'progressCounter', 'distance', 'temporaryEntry', 'longestMatchingEntry', 'positionMatchPointer', 'encodedId', 'dictionary']);
+          this.notifySubs(['checkpointDescription', 'progressCounter', 'distance', 'temporaryEntry', 'longestMatchingEntry', 'positionMatchPointer', 'encodedId']);
 
           this.encodedId = -1;
 
         } else {
 
-          exit(0);
+          //exit(0);
 
         }
       }
@@ -409,6 +417,8 @@ class dbrzVDEEncoder {
       this.dictionary[i] = this.acceptedCharacters.charAt(i);
 
     }
+
+    this.notifySubs(["dictionary"]);
   }
 
 
@@ -448,6 +458,7 @@ class dbrzVDEEncoder {
 
   presetObservables() {
 
+    this.listOfObservedValues.set('reset', new Set());
     this.listOfObservedValues.set('checkpointDescription', new Set());
     this.listOfObservedValues.set('progressCounter', new Set());
     this.listOfObservedValues.set('string', new Set());
@@ -457,6 +468,7 @@ class dbrzVDEEncoder {
     this.listOfObservedValues.set('positionMatchPointer', new Set());
     this.listOfObservedValues.set('encodedId', new Set());
     this.listOfObservedValues.set('dictionary', new Set());
+    this.listOfObservedValues.set('dynamicEntry', new Set());
   }
 
   //

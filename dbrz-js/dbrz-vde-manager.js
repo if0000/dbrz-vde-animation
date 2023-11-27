@@ -16,20 +16,25 @@
 class dbrzVDEManager {
   constructor() {
     this.dbrzVDEE = new dbrzVDEEncoder();
-    this.dbrzVDEE.initDictionary("");
 
-    this.dbrzVDEPIF = new dbrzVDEPresentationInputField("dbrzVDEPresentationInputField");
     this.dbrzVDEPIP = new dbrzVDEPresentationInputProcessing("dbrzVDEPresentationInputProcessing");
     this.dbrzVDEPM = new dbrzVDEPresentationMetrics("dbrzVDEPresentationMeasurement");
     this.dbrzVDEPTTextProcessing = new dbrzVDEPresentationTextual("dbrzVDEPresentationInputString");
-    this.dbrzVDEPTOutput = new dbrzVDEPresentationTextual("dbrzVDEPresentationOutput");
-    this.dbrzVDEPTDictionary = new dbrzVDEPresentationTextual("dbrzVDEPresentationDictionary");
+    this.dbrzVDEPEV = new dbrzVDEPresentationEncodedValue("dbrzVDEPresentationOutput");
+    this.dbrzVDEPTDictionary = new dbrzVDEPresentationTextual("dbrzVDEPresentationDictionary", false);
+    this.dbrzVDEPTLM = new dbrzVDEPresentationTextual("dbrzVDEPresentationLM");
+    this.dbrzVDEPTDE = new dbrzVDEPresentationDynEntry("dbrzVDEPresentationTempEnt");
 
     this.dbrzVDEE.subscribe('checkpointDescription', this.dbrzVDEPTTextProcessing);
-    this.dbrzVDEE.subscribe('string', this.dbrzVDEPTTextProcessing);
     this.dbrzVDEE.subscribe('progressCounter', this.dbrzVDEPM);
-    this.dbrzVDEE.subscribe('encodedId', this.dbrzVDEPTOutput);
+    this.dbrzVDEE.subscribe('encodedId', this.dbrzVDEPM);
+    this.dbrzVDEE.subscribe('dynamicEntry', this.dbrzVDEPM);
+    this.dbrzVDEE.subscribe('reset', this.dbrzVDEPM);
+    this.dbrzVDEE.subscribe('encodedId', this.dbrzVDEPEV);
     this.dbrzVDEE.subscribe('dictionary', this.dbrzVDEPTDictionary);
+    this.dbrzVDEE.subscribe('longestMatchingEntry', this.dbrzVDEPTLM);
+    this.dbrzVDEE.subscribe('dynamicEntry', this.dbrzVDEPTDE);
+    this.dbrzVDEE.subscribe('reset', this.dbrzVDEPTDE);
 
     this.dbrzVDEE.subscribe('string', this.dbrzVDEPIP);
     this.dbrzVDEE.subscribe('progressCounter', this.dbrzVDEPIP);
@@ -37,10 +42,7 @@ class dbrzVDEManager {
     //
     //  These methods should be wire out to the UI
     //
-    this.dbrzVDEE.setInputString("hi i am an input string to be encoded hi i am an input string to be encoded hi i am an input string to be encoded");
-    //this.dbrzVDEE.setInputString("texttexttexttexttexttexttexttexttexttexttexttext");
-    this.dbrzVDEE.unsubscribe('string', this.dbrzVDEPTInputProcessing);
-    this.dbrzVDEE.encode(true);
+    this.dbrzVDEE.initDictionary("");
   }
 }
 
