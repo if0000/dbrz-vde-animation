@@ -80,6 +80,10 @@ class dbrzVDEEncoder {
     this.relativeDist = -1;
     this.encodedId = -1;
 
+    if(this.timerId != undefined) {
+      clearTimeout(this.timerId);
+    }
+    this.timerId = undefined;
     this.stepBystep = true;
 
     this.j = 0;
@@ -115,6 +119,10 @@ class dbrzVDEEncoder {
     this.listOfObservedValues = new Map();
     this.presetObservables();
 
+    if(this.timerId != undefined) {
+      clearTimeout(this.timerId);
+    }
+    this.timerId = undefined;
     this.stepBystep = true;
 
     this.j = 0;
@@ -146,8 +154,8 @@ class dbrzVDEEncoder {
         await new Promise((resolve, reject) => {this.outsourcedResolve = resolve;});
         this.encodeInAsyncEnv();
       } else {
-        await new Promise((resolve, reject) => {setTimeout(resolve, 50)});
-        //await new Promise((resolve, reject) => {setTimeout(resolve, 500)});
+        await new Promise((resolve, reject) => {this.timerId = setTimeout(resolve, 50)});
+        //await new Promise((resolve, reject) => {this.timerId = setTimeout(resolve, 500)});
         this.encodeInAsyncEnv();
       }
     } 
