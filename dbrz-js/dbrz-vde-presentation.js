@@ -87,18 +87,39 @@ class dbrzVDEPresentationInputProcessing extends dbrzVDEInterfaceObserver {
       //default VDE container is the parent to which has to be attached
     }
 
+    if(arguments[1]) {
+      this.preProcessing = true;
+      this.preProcessorObject = arguments[2];
+    } else {
+      this.preProcessing = false;
+    }
+
     this.inputString;
     this.progressStatus = 0;
-
-    this.colorizedProgress;
   }
 
   update() {
     if(arguments.length > 0) {
+      if(arguments[0] == "reset") {
+
+        if(this.preProcessing) {
+          this.preProcessorObject.reset();
+        }
+
+        this.inputString = "";
+        this.progressStatus = 0;
+        this.dbrzPresentationInputProcessing.innerHTML = "";
+
+      } 
       if(arguments[0] == "string") {
         this.inputString = arguments[1];
-      } else {
-        this.dbrzPresentationInputProcessing.innerHTML = this.inputString.slice(0, arguments[1]);
+      } 
+      if(arguments[0] != "string" && arguments[0] != "reset") {
+        if(this.preProcessing) {
+          this.dbrzPresentationInputProcessing.innerHTML = this.preProcessorObject.preProcess(this.inputString.slice(0, arguments[1])).getResult();
+        } else {
+          this.dbrzPresentationInputProcessing.innerHTML = this.inputString.slice(0, arguments[1]);
+        }
       }
     }
   }
@@ -264,6 +285,34 @@ class dbrzVDEPreprocessorNLSQN {
 
   reset() {
     this.entriescounter = 0;
+    this.output = "";
+  }
+
+}
+
+
+//
+//  Keep Formatting
+//
+class dbrzVDEPreprocessorKF {
+
+  constructor() {
+    this.outputInternal = "";
+    this.output = "";
+  }
+
+  preProcess(input) {
+
+    this.output = "<pre class=\"dbrz-vde-inline\">" + input + "</pre>";
+    return this;
+  }
+
+  getResult() {
+    return this.output;
+  }
+
+  reset() {
+    this.outputInternal = "";
     this.output = "";
   }
 

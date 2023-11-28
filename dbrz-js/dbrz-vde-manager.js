@@ -17,7 +17,7 @@ class dbrzVDEManager {
   constructor() {
     this.dbrzVDEE = new dbrzVDEEncoder();
 
-    this.dbrzVDEPIP = new dbrzVDEPresentationInputProcessing("dbrzVDEPresentationInputProcessing");
+    this.dbrzVDEPIP = new dbrzVDEPresentationInputProcessing("dbrzVDEPresentationInputProcessing", true, new dbrzVDEPreprocessorKF());
     this.dbrzVDEPM = new dbrzVDEPresentationMetrics("dbrzVDEPresentationMeasurement");
     this.dbrzVDEPTTextProcessing = new dbrzVDEPresentationTextual("dbrzVDEPresentationInputString");
     this.dbrzVDEPEV = new dbrzVDEPresentationEncodedValue("dbrzVDEPresentationOutput");

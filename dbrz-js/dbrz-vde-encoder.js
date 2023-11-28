@@ -89,7 +89,8 @@ class dbrzVDEEncoder {
     this.stepBystep = true;
 
     this.j = 0;
-    this.subsEntryUnderInvestigation = "";
+    this.subsEntryUnderInvestigation = undefined;
+    //this.subsEntryUnderInvestigation = "";
   }
 
 
@@ -128,14 +129,17 @@ class dbrzVDEEncoder {
     this.stepBystep = true;
 
     this.j = 0;
-    this.subsEntryUnderInvestigation = "";
+    this.subsEntryUnderInvestigation = undefined;
+    //this.subsEntryUnderInvestigation = "";
 
   }
 
 
   setInputString(input) {
 
-    this.string = input;    
+    this.string = input.replace(/[^0-9a-zA-ZáéíóöőúüűÁÉÍÓÖŐÚÜŰ\.\s,!\"\'\-\@\n\(\)]/g, "");
+    //this.string = input.replace(/[^0-9a-zA-ZáéíóöőúüűÁÉÍÓÖŐÚÜŰ\.\s,!\"\'\-\@\n]/g, "");
+    //"0123456789aábcdeéfghiíjklmnoóöőpqrstuúüűvwxyzAÁBCDEÉFGHIÍJKLMNOÓÖŐPQRSTUÚÜŰVWXYZ ,.!\"'-@\n"
     this.notifySubs(["string"]);
 
   }
@@ -157,7 +161,6 @@ class dbrzVDEEncoder {
         this.encodeInAsyncEnv();
       } else {
         await new Promise((resolve, reject) => {this.timerId = setTimeout(resolve, (this.elementAutomaticSpeed.max - this.elementAutomaticSpeed.value))});
-        //await new Promise((resolve, reject) => {this.timerId = setTimeout(resolve, 500)});
         this.encodeInAsyncEnv();
       }
     } 
@@ -251,8 +254,13 @@ class dbrzVDEEncoder {
           // No more match:
           } else {
 
-            this.longestMatchingEntry = this.longestMatchingEntry + this.temporaryEntry;
+            //#FIXME
+            this.progressCounter = this.progressCounter - this.j + 1
+            this.longestMatchingEntry = this.longestMatchingEntry + this.string.charAt(this.progressCounter);
+            this.temporaryEntry = this.string.charAt(this.progressCounter);
+            //this.longestMatchingEntry = this.longestMatchingEntry + this.temporaryEntry;
 
+            //#FIXME
             if(!this.dictionaryAux.has(this.longestMatchingEntry)) {
 
               this.nextEntryPos = this.dictionary.length;
@@ -260,10 +268,27 @@ class dbrzVDEEncoder {
               this.dictionaryAux.set(this.longestMatchingEntry, this.nextEntryPos);
               this.dynamicEntry = this.longestMatchingEntry;
               this.notifySubs(['dynamicEntry']);
+              this.calculateVirtualIndex();
   
+            } else {
+              this.encodedId = this.dictionaryAux.get(this.longestMatchingEntry);
+              this.nextEntryPos = this.dictionary.length;
+              this.dictionary[this.nextEntryPos] = this.longestMatchingEntry;
+              this.dictionaryAux.set(this.longestMatchingEntry, this.nextEntryPos);
+              this.dynamicEntry = this.longestMatchingEntry;
+              this.notifySubs(['dynamicEntry']);
             }
-
-            this.calculateVirtualIndex();
+            //if(!this.dictionaryAux.has(this.longestMatchingEntry)) {
+            //
+            //  this.nextEntryPos = this.dictionary.length;
+            //  this.dictionary[this.nextEntryPos] = this.longestMatchingEntry;
+            //  this.dictionaryAux.set(this.longestMatchingEntry, this.nextEntryPos);
+            //  this.dynamicEntry = this.longestMatchingEntry;
+            //  this.notifySubs(['dynamicEntry']);
+            //
+            //}
+            //
+            //this.calculateVirtualIndex();
 
             this.checkpointDescription = "06 - No more character match during virtual word composition. Index issue and dictionary update.";
             this.notifySubs(['checkpointDescription', 'progressCounter', 'distance', 'temporaryEntry', 'longestMatchingEntry', 'positionMatchPointer', 'encodedId']);
@@ -271,10 +296,17 @@ class dbrzVDEEncoder {
             this.encodedId = -1;
 
             this.longestMatchingEntry = "";
-            this.temporaryEntry = this.string.charAt(this.progressCounter);
+            //#FIXME
+            //this.temporaryEntry = this.string.charAt(this.progressCounter);
             this.subsEntryUnderInvestigation = undefined;
 
-            this.progressCounter = this.progressCounter - this.j + 1;
+            //
+            //  #FIXME - 20231128
+            //  Here another check and conditional branch have to take place, based on if 'no more match' due to end of dict, or mismatch along the word examination
+            //  If the first: then should not decrease the value of the progressCounter with j
+            //  Else: decreasing is valid.
+            //
+            //this.progressCounter = this.progressCounter - this.j + 1;
 
             this.distance = 0;
             this.virtualMode = false;
@@ -413,7 +445,8 @@ class dbrzVDEEncoder {
 
     if (acceptedChars.length == 0) {
 
-      this.acceptedCharacters = "0123456789aábcdeéfghiíjklmnoóöőpqrstuúüűvwxyzAÁBCDEÉFGHIÍJKLMNOÓÖŐPQRSTUÚÜŰVWXYZ ,.!\"'-@\n";
+      //this.acceptedCharacters = "0123456789aábcdeéfghiíjklmnoóöőpqrstuúüűvwxyzAÁBCDEÉFGHIÍJKLMNOÓÖŐPQRSTUÚÜŰVWXYZ ,.!\"'-@";
+      this.acceptedCharacters = "0123456789aábcdeéfghiíjklmnoóöőpqrstuúüűvwxyzAÁBCDEÉFGHIÍJKLMNOÓÖŐPQRSTUÚÜŰVWXYZ ,.!\"'-@\n\(\)";
 
     } else {
 
