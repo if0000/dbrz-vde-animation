@@ -254,13 +254,10 @@ class dbrzVDEEncoder {
           // No more match:
           } else {
 
-            //#FIXME
             this.progressCounter = this.progressCounter - this.j + 1
             this.longestMatchingEntry = this.longestMatchingEntry + this.string.charAt(this.progressCounter);
             this.temporaryEntry = this.string.charAt(this.progressCounter);
-            //this.longestMatchingEntry = this.longestMatchingEntry + this.temporaryEntry;
 
-            //#FIXME
             if(!this.dictionaryAux.has(this.longestMatchingEntry)) {
 
               this.nextEntryPos = this.dictionary.length;
@@ -278,17 +275,6 @@ class dbrzVDEEncoder {
               this.dynamicEntry = this.longestMatchingEntry;
               this.notifySubs(['dynamicEntry']);
             }
-            //if(!this.dictionaryAux.has(this.longestMatchingEntry)) {
-            //
-            //  this.nextEntryPos = this.dictionary.length;
-            //  this.dictionary[this.nextEntryPos] = this.longestMatchingEntry;
-            //  this.dictionaryAux.set(this.longestMatchingEntry, this.nextEntryPos);
-            //  this.dynamicEntry = this.longestMatchingEntry;
-            //  this.notifySubs(['dynamicEntry']);
-            //
-            //}
-            //
-            //this.calculateVirtualIndex();
 
             this.checkpointDescription = "06 - No more character match during virtual word composition. Index issue and dictionary update.";
             this.notifySubs(['checkpointDescription', 'progressCounter', 'distance', 'temporaryEntry', 'longestMatchingEntry', 'positionMatchPointer', 'encodedId']);
@@ -296,17 +282,7 @@ class dbrzVDEEncoder {
             this.encodedId = -1;
 
             this.longestMatchingEntry = "";
-            //#FIXME
-            //this.temporaryEntry = this.string.charAt(this.progressCounter);
             this.subsEntryUnderInvestigation = undefined;
-
-            //
-            //  #FIXME - 20231128
-            //  Here another check and conditional branch have to take place, based on if 'no more match' due to end of dict, or mismatch along the word examination
-            //  If the first: then should not decrease the value of the progressCounter with j
-            //  Else: decreasing is valid.
-            //
-            //this.progressCounter = this.progressCounter - this.j + 1;
 
             this.distance = 0;
             this.virtualMode = false;
