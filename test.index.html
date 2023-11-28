@@ -14,16 +14,82 @@
 </head>
 <body style="background-color: #181f33;">
   <!--Start of main bootstrap container-->
-  <div class="container-fluid g-0 px-0 mx-auto text-break">
+  <div class="container-fluid g-0 px-0 mx-auto text-break dbrz-vde-scrollbar">
     <div class="row d-flex g-0">
       <div class="col-12 dbrz-vde-content-cell border border-white border-top-0 border-end-0 border-start-0 border-bottom-1">
-        <span class="dbrz-vde-presentation-text-informal">Static part of the dictionary - the alphabet:</span><br />
+        <span class="dbrz-vde-presentation-text-informal">Static part of the dictionary - the alphabet:</span>
          <span id="dbrzVDEPresentationDictionary" class="d-block p-0 m-0 dbrz-vde-presentation-text-content"></span>
       </div>
     </div>
     <div class="row d-flex g-0 border border-white border-top-0 border-end-0 border-start-0 border-bottom-1">
       <div class="col-12 dbrz-vde-text dbrz-vde-input justify-content-center align-items-center text-center">
-        <textarea id="dbrzVDEPresentationInputField" class="dbrz-vde-presentation-text-content dbrz-vde-content-cell text-break" wrap="hard" placeholder="Write your content to be encoded here. It can contain characters exclusively from the 'Static alphabet'." style="width: 100%; height: 100%; margin: 0; border: 0px; background-color: #181f33;"></textarea>
+        <textarea id="dbrzVDEPresentationInputField" class="dbrz-vde-presentation-text-content dbrz-vde-content-cell text-break" wrap="hard" placeholder="Write your content to be encoded here. It can contain characters exclusively from the 'Static alphabet'." style="width: 100%; height: 100%; margin: 0; border: 0px; background-color: #181f33;">
+I got my mind set on you
+I got my mind set on you
+I got my mind set on you
+I got my mind set on you
+
+But it's gonna take money
+A whole lotta spending money
+It's gonne take plenty of money
+To do it right, child
+
+It's gonna take time
+A whole lot of precious time
+It's gonna take patience and time, mmm
+To do it, to do it, to do it, to do it, to do it
+To do it right, child
+
+I got my mind set on you
+I got my mind set on you
+I got my mind set on you
+I got my mind set on you
+
+And this time I know it's for real
+The feelings that I feel
+I know if I put my mind to it
+I know that I really can do it
+I got my mind set on you
+(Set on you)
+I got my mind set on you
+(Set on you)
+
+But it's gonna take money
+A whole lotta spending money
+It's gonna take plenty of money
+To do it right, child
+
+It's gonna take time
+Whole lot of precious time
+It's gonna take patience and time, mmm
+To do it, to do it, to do it, to do it, to do it
+To do it right
+
+I got my mind set on you
+I got my mind set on you
+I got my mind set on you
+I got my mind set on you
+
+And this time I know it's for real
+The feelings that I feel
+I know if I put my mind to it
+I know that I really can do it
+
+But it's gonna take money
+A whole lotta spending money
+It's gonna take plenty of money
+To do it right, child
+
+It's gonna take a-time
+A whole lot of precious time
+It's gonna take patience and time, mmm
+To do it, to do it, to do it, to do it, to do it
+To do it right
+
+I got my mind set on you
+I got my mind set on you
+I got my mind set on you
+I got my mind set on you</textarea>
       </div>
     </div>
     <div class="row d-flex g-0 dbrz-vde-controllers-container dbrz-vde-content-cell">
@@ -31,42 +97,41 @@
         <button id="dbrzResetBtn" class="dbrz-vde-button">Start encoder</button>
       </div>
       <div class="col-lg-4 p-3 d-flex justify-content-center align-items-center">
-        <input id="dbrzAutomaticExecution" class="dbrz-vde-presentation-text-informal" type="checkbox">&nbsp;<label class="dbrz-vde-presentation-text-informal" for="dbrzInputText">Auto steps</label>
+        <label class="dbrz-vde-presentation-text-informal" for="dbrzInputText">Auto steps</label>&nbsp;<input id="dbrzAutomaticExecution" class="dbrz-vde-presentation-text-informal" type="checkbox"><br />
+        <label class="dbrz-vde-presentation-text-informal" for="dbrzAutomaticSpeed">Auto speed</label>&nbsp;<input id="dbrzAutomaticSpeed" type="range" name="dbrzAutomaticSpeed" min="0" max="500">
       </div>
       <div class="col-lg-4 p-3 d-flex justify-content-center align-items-center">
         <button id="dbrzStepByStepBtn" class="dbrz-vde-button">Manual step -></button>
       </div>
     </div>
-    <div class="row d-flex g-0 border border-white border-top-1 border-end-0 border-start-0 border-bottom-0 dbrz-vde-fix-height-container">
-      <div class="col-12 dbrz-vde-content-cell">
-        <span class="dbrz-vde-presentation-text-informal">Current status during input processing:</span><br />
-         <span id="dbrzVDEPresentationInputProcessing" class="dbrz-vde-presentation-text-content"></span>
+    <div class="row d-flex g-0">
+      <div class="col-12 col-lg-4 border border-white border-top-1 border-end-1 border-start-0 border-bottom-0 dbrz-vde-fix-height-container dbrz-vde-text dbrz-vde-content-cell justify-content-center align-items-center">
+        <span class="dbrz-vde-presentation-text-informal">Encoder internal state:</span>
+        <span id="dbrzVDEPresentationInputString" class="d-block dbrz-vde-presentation-text-content"><span>
+      </div>
+      <div class="col-12 col-lg-8 border border-white border-top-1 border-end-0 border-start-0 border-bottom-0 dbrz-vde-content-cell">
+        <span class="dbrz-vde-presentation-text-informal">Compression ratio:</span><br/>
+        <canvas id="dbrzVDEPresentationMeasurement" style="width:100%;"></canvas>
       </div>
     </div>
-    <div class="row d-flex g-0 border border-white border-top-1 border-end-0 border-start-0 border-bottom-0">
-      <div class="col-12 dbrz-vde-text dbrz-vde-input dbrz-vde-content-cell justify-content-center align-items-center">
-        <span class="dbrz-vde-presentation-text-informal">Encoder internal state:</span><br /> 
-        <span id="dbrzVDEPresentationInputString" class="d-block dbrz-vde-presentation-text-content"><span>
+    <div class="row d-flex g-0 border border-white border-top-0 border-end-0 border-start-0 border-bottom-0">
+      <div class="col-12 dbrz-vde-fix-height-container border border-white border-top-1 border-end-0 border-start-0 border-bottom-0 dbrz-vde-content-cell">
+        <span class="dbrz-vde-presentation-text-informal">Current longest match:</span>
+         <span id="dbrzVDEPresentationLM" class="d-block p-0 m-0 dbrz-vde-presentation-text-content"></span>
       </div>
     </div>
     <div class="row d-flex g-0">
-      <div class="col-12 col-lg-6 border border-white border-top-1 border-end-1 border-start-0 border-bottom-0 dbrz-vde-content-cell">
-        <span class="dbrz-vde-presentation-text-informal">Current longest match:</span><br />
-         <span id="dbrzVDEPresentationLM" class="d-block p-0 m-0 dbrz-vde-presentation-text-content"></span>
+      <div class="col-12 col-lg-4 dbrz-vde-fix-height-container dbrz-vde-fix-max-height border border-white border-top-1 border-end-1 border-start-0 border-bottom-0 dbrz-vde-content-cell">
+        <span class="dbrz-vde-presentation-text-informal">Current status during input processing:</span>
+         <span id="dbrzVDEPresentationInputProcessing" class="d-block p-0 m-0 dbrz-vde-presentation-text-content"></span>
       </div>
-      <div class="col-12 col-lg-6 border border-white border-top-1 border-end-0 border-start-0 border-bottom-0 dbrz-vde-content-cell">
-        <span class="dbrz-vde-presentation-text-informal">Dynamic part of the dictionary:</span><br />
+      <div class="col-12 col-lg-4 dbrz-vde-fix-height-container dbrz-vde-fix-max-height border border-white border-top-1 border-end-1 border-start-0 border-bottom-0 dbrz-vde-content-cell">
+        <span class="dbrz-vde-presentation-text-informal">Dynamic part of the dictionary:</span>
          <span id="dbrzVDEPresentationTempEnt" class="d-block p-0 m-0 dbrz-vde-presentation-text-content"></span>
       </div>
-    </div>
-    <div class="row d-flex g-0 border border-white border-top-0 border-end-0 border-start-0 border-bottom-1">
-      <div class="col-12 col-lg-6 border border-white border-top-1 border-end-1 border-start-0 border-bottom-0 dbrz-vde-content-cell">
-        <span class="dbrz-vde-presentation-text-informal">Issued index (primary/virtual):</span><br/>
+      <div class="col-12 col-lg-4 dbrz-vde-fix-height-container dbrz-vde-fix-max-height border border-white border-top-1 border-end-0 border-start-0 border-bottom-0 dbrz-vde-content-cell">
+        <span class="dbrz-vde-presentation-text-informal">Issued index (primary/virtual):</span>
         <span id="dbrzVDEPresentationOutput" class="d-block p-0 m-0 dbrz-vde-presentation-text-content"></span>
-      </div>
-      <div class="col-12 col-lg-6 border border-white border-top-1 border-end-0 border-start-0 border-bottom-0 dbrz-vde-content-cell">
-        <span class="dbrz-vde-presentation-text-informal">Compression ratio:</span><br/>
-        <canvas id="dbrzVDEPresentationMeasurement" style="width:100%;"></canvas><!--max-width:600px-->
       </div>
     </div>
   </div>

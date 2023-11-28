@@ -1,9 +1,42 @@
+
+.dbrz-vde-scrollbar {
+  /* width */
+  ::-webkit-scrollbar {
+    width: 3px;
+  }
+
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1; 
+  }
+ 
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #888; 
+  }
+
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555; 
+  }
+}
+
+.dbrz-vde-inline {
+  display: inline;
+}
+
 .dbrz-vde-input {
-  min-height: 10vh;
+  min-height: 12vh;
 }
 
 .dbrz-vde-fix-height-container {
-  /*max-height: 10vh;*/
+  min-height: 12vh;
+}
+
+.dbrz-vde-fix-max-height {
+  max-height: 30vh;
+  overflow: auto;
+  /*overflow: scroll;*/
 }
 
 .dbrz-vde-content-cell {
@@ -17,11 +50,18 @@
 }
 
 .dbrz-vde-presentation-text-informal {
+  display:block;
+  position:sticky;
+  z-index: 2;
+  top: 0px;
+  left: 0px;
   font-weight: 300;
   font-family: 'Lato Light';
   letter-spacing: 0.1em;
   /*font-family: 'Courier New', Courier, monospace;*/
-  color: #57ffdc;
+  color: #00ffff;
+  background-color: #181f33;
+  /*color: #57ffdc;*/
   /*color: #fff;*/
 }
 

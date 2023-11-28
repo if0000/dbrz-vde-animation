@@ -34,6 +34,8 @@ class dbrzVDEEncoder {
     this.elemntInputField = document.getElementById("dbrzVDEPresentationInputField");
 
     this.elementAutomaticExecution = document.getElementById("dbrzAutomaticExecution");
+
+    this.elementAutomaticSpeed = document.getElementById("dbrzAutomaticSpeed");
   }
 
 
@@ -154,7 +156,7 @@ class dbrzVDEEncoder {
         await new Promise((resolve, reject) => {this.outsourcedResolve = resolve;});
         this.encodeInAsyncEnv();
       } else {
-        await new Promise((resolve, reject) => {this.timerId = setTimeout(resolve, 50)});
+        await new Promise((resolve, reject) => {this.timerId = setTimeout(resolve, (this.elementAutomaticSpeed.max - this.elementAutomaticSpeed.value))});
         //await new Promise((resolve, reject) => {this.timerId = setTimeout(resolve, 500)});
         this.encodeInAsyncEnv();
       }

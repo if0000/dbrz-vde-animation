@@ -50,47 +50,24 @@ class dbrzVDEPresentationEncodedValue extends dbrzVDEInterfaceObserver {
     } else {
       //default VDE container is the parent to which has to be attached
     }
-  }
-
-  update() {
-    if(arguments.length > 1) {
-      if (arguments[1] > -1) {
-        this.dbrzPresentationInputField.innerHTML = arguments[1];
-      } else {
-        this.dbrzPresentationInputField.innerHTML = "";
-      }
-    }
-  }
-}
-
-class dbrzVDEPresentationDynEntry extends dbrzVDEInterfaceObserver {
-
-  constructor() {
-    super();
-    if(arguments.length > 0) {
-      if (document.getElementById(arguments[0]) != null) {
-        this.dbrzPresentationInputField = document.getElementById(arguments[0]);
-      } else {
-        //default VDE container is the parent to which has to be attached
-      }
-    } else {
-      //default VDE container is the parent to which has to be attached
-    }
-    this.cummulatedDynamicEntries = "";
+    this.output = "";
   }
 
   update() {
     if(arguments.length > 1) {
       if(arguments[0] == "reset") {
-        this.cummulatedDynamicEntries = "";
+        this.output = "";
         this.dbrzPresentationInputField.innerHTML = "";
-      } else {
-        if(this.cummulatedDynamicEntries.length == 0) {
-          this.cummulatedDynamicEntries = arguments[1];
-        } else {
-          this.cummulatedDynamicEntries = this.cummulatedDynamicEntries + "," + arguments[1];
+      }
+      if(arguments[0] == "encodedId") {
+        if (arguments[1] > -1) {
+          if(this.output == "") {
+            this.output = arguments[1];
+          } else {
+            this.output = this.output + ", " + arguments[1];
+          }
+          this.dbrzPresentationInputField.innerHTML = this.output;
         }
-        this.dbrzPresentationInputField.innerHTML = this.cummulatedDynamicEntries;
       }
     }
   }
@@ -147,7 +124,7 @@ class dbrzVDEPresentationMetrics extends dbrzVDEInterfaceObserver {
         labels: [],
         datasets: [{ 
           data: [],
-          borderColor: "red",
+          borderColor: "#00ffff",
           fill: false
         }]
       },
@@ -234,28 +211,64 @@ class dbrzVDEPresentationTextual extends dbrzVDEInterfaceObserver {
     }
 
     if(arguments[1]) {
-      this.preformatting = true;
+      this.preProcessing = true;
+      this.preProcessorObject = arguments[2];
     } else {
-      this.preformatting = false;
+      this.preProcessing = false;
     }
-  }
-
-  preprocessorComaToBreakLine(param) {
-    let result = (String(param)).replaceAll(",", "<br />");
-    return result;
   }
 
   update() {
     if(arguments.length > 1) {
-      if(this.preformatting) {
-        this.dbrzPresentationTextualContainer.innerHTML = this.preprocessorComaToBreakLine(arguments[1]);
+      if(arguments[0] == "reset") {
+        if(this.preProcessing) {
+          this.preProcessorObject.reset();
+        }
       } else {
-        this.dbrzPresentationTextualContainer.innerHTML = arguments[1];
+        if(this.preProcessing) {
+          this.dbrzPresentationTextualContainer.innerHTML = this.preProcessorObject.preProcess(arguments[1]).getResult();
+        } else {
+          this.dbrzPresentationTextualContainer.innerHTML = arguments[1];
+        }
       }
     }
   }
 
 }
+
+
+//
+//  New Line with SeQuence Number
+//
+class dbrzVDEPreprocessorNLSQN {
+
+  constructor() {
+    this.entriescounter = 0;
+    this.output = "";
+  }
+
+  preProcess(input) {
+    if(this.output == "") {
+      this.output = this.entriescounter + " - <pre class=\"dbrz-vde-inline\">" + input + "</pre><br />";
+    } else {
+      this.output = this.output + this.entriescounter + " - <pre class=\"dbrz-vde-inline\">" + input + "</pre><br />";
+    }
+    this.entriescounter++;
+
+    return this;
+  }
+
+  getResult() {
+    return this.output;
+  }
+
+  reset() {
+    this.entriescounter = 0;
+    this.output = "";
+  }
+
+}
+
 
 //  Frequency charts are also beneficial
 
