@@ -137,9 +137,7 @@ class dbrzVDEEncoder {
 
   setInputString(input) {
 
-    this.string = input.replace(/[^0-9a-zA-ZáéíóöőúüűÁÉÍÓÖŐÚÜŰ\.\s,!\"\'\-\@\n\(\)]/g, "");
-    //this.string = input.replace(/[^0-9a-zA-ZáéíóöőúüűÁÉÍÓÖŐÚÜŰ\.\s,!\"\'\-\@\n]/g, "");
-    //"0123456789aábcdeéfghiíjklmnoóöőpqrstuúüűvwxyzAÁBCDEÉFGHIÍJKLMNOÓÖŐPQRSTUÚÜŰVWXYZ ,.!\"'-@\n"
+    this.string = input.replace(/[^0-9a-zA-ZáéíóöőúüűÁÉÍÓÖŐÚÜŰ\.\s,!\"\'\-\+\*\@\(\)\[\]]/g, "");
     this.notifySubs(["string"]);
 
   }
@@ -421,8 +419,7 @@ class dbrzVDEEncoder {
 
     if (acceptedChars.length == 0) {
 
-      //this.acceptedCharacters = "0123456789aábcdeéfghiíjklmnoóöőpqrstuúüűvwxyzAÁBCDEÉFGHIÍJKLMNOÓÖŐPQRSTUÚÜŰVWXYZ ,.!\"'-@";
-      this.acceptedCharacters = "0123456789aábcdeéfghiíjklmnoóöőpqrstuúüűvwxyzAÁBCDEÉFGHIÍJKLMNOÓÖŐPQRSTUÚÜŰVWXYZ ,.!\"'-@\n\(\)";
+      this.acceptedCharacters = "0123456789aábcdeéfghiíjklmnoóöőpqrstuúüűvwxyzAÁBCDEÉFGHIÍJKLMNOÓÖŐPQRSTUÚÜŰVWXYZ ,.!\"'-+*@\t\n\r\(\)\[\]";
 
     } else {
 
