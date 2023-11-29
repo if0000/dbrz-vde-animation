@@ -288,6 +288,8 @@ class dbrzVDEEncoder {
                 //  For proper dictionary building the virtual word based duplicated entries should be allowed, but current MAP based aux data structure prevents and mess up this operation: 
                 //    according to the current implementation, during the lookup it redirects the position and overwrite takes place in the dictionaryAux. 
                 //    Therefore, during the neighborhood lookup it might give back false info, additionally the dictionary chaining also might break.
+                //    
+                //  Until that at the decoding side it must handle correctly if the dictionary is not full yet, but the previously given index is a primary position such a way that the actual index first char differs from the prev index last char.
                 //
                 //this.nextEntryPos = this.dictionary.length;
                 //this.dictionary[this.nextEntryPos] = this.longestMatchingEntry;
