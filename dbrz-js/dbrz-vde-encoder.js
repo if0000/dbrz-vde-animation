@@ -17,11 +17,13 @@ class dbrzVDEEncoder {
   constructor() {
 
     this.encoderReset();
-    this.dictDynSize = 257;
+    this.dictDynSize = 129;
     this.allowedMaxOverflowAligner = 0;
     this.allowedMaxOverflow = this.dictDynSize - this.allowedMaxOverflowAligner;
 
+    //
     //  Event listener should be attached once, even if reset takes place.
+    //
     this.elementEventAttached = document.getElementById("dbrzStepByStepBtn");
     this.elementEventAttached.addEventListener("click", () => {
       if(typeof this.outsourcedResolve === "function") {
@@ -233,13 +235,19 @@ class dbrzVDEEncoder {
         }
       }
     
+    //
     //  Searching for the available longest fit virtual entry starting from the longest matching primary entry.
+    //
     } else {
 
+      //
       //  The match is over the static part of the dictionary AND the subsequent entry exists.
+      //
       if((this.positonMatchPointer + this.distance) < this.dictionary.length) {
 
+        //
         //  The end of the subsequent word has NOT been reached yet.
+        //
         if (this.subsEntryUnderInvestigation == undefined) {
 
           this.subsEntryUnderInvestigation = this.dictionary[(this.positonMatchPointer + this.distance)];
@@ -252,7 +260,10 @@ class dbrzVDEEncoder {
         if (this.j < this.subsEntryUnderInvestigation.length) {
           
           this.temporaryEntry = this.temporaryEntry + this.string.charAt(this.progressCounter);
+
+          //
           // Match the next character
+          //
           if (this.subsEntryUnderInvestigation.charAt(this.j) == this.string.charAt(this.progressCounter)) {
 
             this.checkpointDescription = "05 - Character match during the examination of chaining of subsequent primary words.";
@@ -260,7 +271,9 @@ class dbrzVDEEncoder {
 
             this.j = this.j + 1;
 
+          //
           // No more match:
+          //
           } else {
 
             this.progressCounter = this.progressCounter - this.j + 1
@@ -269,7 +282,9 @@ class dbrzVDEEncoder {
 
             if(!this.dictionaryAux.has(this.longestMatchingEntry)) {
 
-              //Implementation of the limited dictionary size
+              //
+              // Implementation of the limited dictionary size
+              //
               if(this.dictionary.length < (this.dictDynSize + this.acceptedCharacters.length)) {
                 this.nextEntryPos = this.dictionary.length;
                 this.dictionary[this.nextEntryPos] = this.longestMatchingEntry;
@@ -282,7 +297,10 @@ class dbrzVDEEncoder {
   
             } else {
               this.encodedId = this.dictionaryAux.get(this.longestMatchingEntry);
-              //Implementation of the limited dictionary size
+
+              //
+              // Implementation of the limited dictionary size
+              //
               if(this.dictionary.length < (this.dictDynSize + this.acceptedCharacters.length)) {
                 //
                 //  For proper dictionary building the virtual word based duplicated entries should be allowed, but current MAP based aux data structure prevents and mess up this operation: 
@@ -316,8 +334,10 @@ class dbrzVDEEncoder {
 
           }
 
+        //
         // The end of the subsequent word has already been reached.
         // Check the next subsequent primary entry.
+        //
         } else {
 
           this.checkpointDescription = "07 - End of a subsequent word with full match. Setup to check for the next one.";
@@ -334,7 +354,9 @@ class dbrzVDEEncoder {
 
         }
 
+      //
       // No more subsequent primary entries to check
+      //
       } else {
 
         this.progressCounter = (this.progressCounter - this.j);
@@ -343,7 +365,9 @@ class dbrzVDEEncoder {
 
         if(!this.dictionaryAux.has(this.longestMatchingEntry)) {
 
-          //Implementation of the limited dictionary size
+          //
+          // Implementation of the limited dictionary size
+          //
           if(this.dictionary.length < (this.dictDynSize + this.acceptedCharacters.length)) {
             this.nextEntryPos = this.dictionary.length;
             this.dictionary[this.nextEntryPos] = this.longestMatchingEntry;
@@ -374,7 +398,9 @@ class dbrzVDEEncoder {
       }
     }
 
+    //
     // End of the input string: the internal states has to be examined for proper handling.
+    //
     if(this.progressCounter == (this.string.length - 1)) {
 
       if(this.longestMatchingEntry.length != 0) {
@@ -390,7 +416,9 @@ class dbrzVDEEncoder {
 
         if(!this.dictionaryAux.has(this.longestMatchingEntry)) {
 
-          //Implementation of the limited dictionary size
+          //
+          // Implementation of the limited dictionary size
+          //
           if(this.dictionary.length < (this.dictDynSize + this.acceptedCharacters.length)) {
             this.nextEntryPos = this.dictionary.length;
             this.dictionary[this.nextEntryPos] = this.longestMatchingEntry;
@@ -456,7 +484,9 @@ class dbrzVDEEncoder {
   }
 
 
-  //  Simplified: for the sake of simplicity those "bytes" which are out of the set will be skipped during processing
+  //
+  // Simplified: for the sake of simplicity those "bytes" which are out of the set will be skipped during processing
+  //
   initDictionary(acceptedChars) {
 
     if (acceptedChars.length == 0) {
@@ -542,7 +572,9 @@ class dbrzVDEEncoder {
 
     } else {
 
+      //
       //  There is not such topic to subscribe on.
+      //
       return -1;
 
     }
@@ -567,7 +599,9 @@ class dbrzVDEEncoder {
       }
     } else {
 
+      //
       //  There is not such topic to unsubscribe from.
+      //
       return -1;
 
     }

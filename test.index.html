@@ -16,14 +16,18 @@
   <!--Start of main bootstrap container-->
   <div class="container-fluid g-0 px-0 mx-auto text-break dbrz-vde-scrollbar">
     <div class="row d-flex g-0">
-      <div class="col-12 dbrz-vde-content-cell border border-white border-top-0 border-end-0 border-start-0 border-bottom-1">
-        <span class="dbrz-vde-presentation-text-informal">Static part of the dictionary - the alphabet:</span>
-         <span id="dbrzVDEPresentationDictionary" class="d-block p-0 m-0 dbrz-vde-presentation-text-content"></span>
+      <div class="col-12 dbrz-vde-content-cell border border-white border-0">
+        <div class="dbrz-vde-general-container" style="height: 100%;">
+          <div class="dbrz-vde-presentation-text-informal">The alphabet - static part of the dictionary</div>
+          <div id="dbrzVDEPresentationDictionary" class="d-block p-0 m-0 dbrz-vde-presentation-text-content"></div>
+        </div>
       </div>
     </div>
-    <div class="row d-flex g-0 border border-white border-top-0 border-end-0 border-start-0 border-bottom-1">
-      <div class="col-12 dbrz-vde-text dbrz-vde-input justify-content-center align-items-center text-center">
-        <textarea id="dbrzVDEPresentationInputField" class="dbrz-vde-presentation-text-content dbrz-vde-content-cell text-break" wrap="hard" placeholder="Write your content to be encoded here. It can contain characters exclusively from the 'Static alphabet'." style="width: 100%; height: 100%; margin: 0; border: 0px; background-color: #181f33;">
+    <div class="row d-flex g-0 border border-white border-0">
+      <div class="col-12 col-lg-6 dbrz-vde-content-cell border border-white border-0">
+        <div class="dbrz-vde-general-container" style="height: 100%;">
+          <div class="dbrz-vde-presentation-text-informal">Your text comes here</div>
+          <textarea id="dbrzVDEPresentationInputField" class="dbrz-vde-presentation-text-content dbrz-vde-content-cell text-break" wrap="hard" placeholder="Write your content to be encoded here. It can contain characters exclusively from the 'Static alphabet'." style="width: 100%; margin: 0; border: 0px; background-color: #1f293f;">
 I got my mind set on you
 I got my mind set on you
 I got my mind set on you
@@ -89,6 +93,13 @@ I got my mind set on you
 I got my mind set on you
 I got my mind set on you
 I got my mind set on you</textarea>
+        </div>
+      </div>
+      <div class="col-12 col-lg-6 border border-white border-0 dbrz-vde-fix-height-container dbrz-vde-text dbrz-vde-content-cell justify-content-center align-items-center">
+        <div class="dbrz-vde-general-container" style="height: 100%;">
+          <div class="dbrz-vde-presentation-text-informal">Encoder internal state</div>
+          <div id="dbrzVDEPresentationInputString" class="d-block dbrz-vde-presentation-text-content"></div>
+        </div>
       </div>
     </div>
     <div class="row d-flex g-0 dbrz-vde-controllers-container dbrz-vde-content-cell">
@@ -104,33 +115,43 @@ I got my mind set on you</textarea>
       </div>
     </div>
     <div class="row d-flex g-0">
-      <div class="col-12 col-lg-4 border border-white border-top-1 border-end-1 border-start-0 border-bottom-0 dbrz-vde-fix-height-container dbrz-vde-text dbrz-vde-content-cell justify-content-center align-items-center">
-        <span class="dbrz-vde-presentation-text-informal">Encoder internal state:</span>
-        <span id="dbrzVDEPresentationInputString" class="d-block dbrz-vde-presentation-text-content"><span>
+      <div class="col-12 col-lg-4 border border-white border-0 dbrz-vde-fix-height-container dbrz-vde-text dbrz-vde-content-cell"><!-- justify-content-center align-items-center -->
+        <div class="dbrz-vde-general-container" style="height: 100%;">
+          <div class="dbrz-vde-presentation-text-informal">Current compression ratio</div>
+          <div id="dbrzVDEPresentationCCR" class="d-block p-0 m-0 dbrz-vde-presentation-text-content"></div>
+        </div>
       </div>
-      <div class="col-12 col-lg-8 border border-white border-top-1 border-end-0 border-start-0 border-bottom-0 dbrz-vde-content-cell">
-        <span class="dbrz-vde-presentation-text-informal">Evolution of compression ratio:</span><br/>
+      <div class="col-12 col-lg-8 border border-white border-0 dbrz-vde-content-cell">
+        <span class="dbrz-vde-presentation-text-informal">Evolution of compression ratio</span>
         <canvas id="dbrzVDEPresentationMeasurement" style="width:100%;"></canvas>
       </div>
     </div>
-    <div class="row d-flex g-0 border border-white border-top-0 border-end-0 border-start-0 border-bottom-0">
-      <div class="col-12 dbrz-vde-fix-height-container border border-white border-top-1 border-end-0 border-start-0 border-bottom-0 dbrz-vde-content-cell">
-        <span class="dbrz-vde-presentation-text-informal">Current longest match:</span>
-         <span id="dbrzVDEPresentationLM" class="d-block p-0 m-0 dbrz-vde-presentation-text-content"></span>
+    <div class="row d-flex g-0 border border-white border-0">
+      <div class="col-12 dbrz-vde-fix-height-container border border-white border-0 dbrz-vde-content-cell">
+        <div class="dbrz-vde-general-container" style="height: 100%;">
+          <div class="dbrz-vde-presentation-text-informal">Current longest match</div>
+          <div id="dbrzVDEPresentationLM" class="d-block p-0 m-0 dbrz-vde-presentation-text-content"></div>
+        </div>
       </div>
     </div>
     <div class="row d-flex g-0">
-      <div class="col-12 col-lg-4 dbrz-vde-fix-height-container dbrz-vde-fix-max-height border border-white border-top-1 border-end-1 border-start-0 border-bottom-0 dbrz-vde-content-cell">
-        <span class="dbrz-vde-presentation-text-informal">Current status during input processing:</span>
-         <span id="dbrzVDEPresentationInputProcessing" class="d-block p-0 m-0 dbrz-vde-presentation-text-content"></span>
+      <div class="col-12 col-lg-4 dbrz-vde-fix-height-container dbrz-vde-fix-max-height border border-white border-0 dbrz-vde-content-cell">
+        <div class="dbrz-vde-general-container" style="height: 100%;">
+          <div class="dbrz-vde-presentation-text-informal">Current status during input processing</div>
+          <div id="dbrzVDEPresentationInputProcessing" class="d-block p-0 m-0 dbrz-vde-presentation-text-content"></div>
+        </div>
       </div>
-      <div class="col-12 col-lg-4 dbrz-vde-fix-height-container dbrz-vde-fix-max-height border border-white border-top-1 border-end-1 border-start-0 border-bottom-0 dbrz-vde-content-cell">
-        <span class="dbrz-vde-presentation-text-informal">Dynamic part of the dictionary (pos - entry):</span>
-         <span id="dbrzVDEPresentationTempEnt" class="d-block p-0 m-0 dbrz-vde-presentation-text-content"></span>
+      <div class="col-12 col-lg-4 dbrz-vde-fix-height-container dbrz-vde-fix-max-height border border-white border-0 dbrz-vde-content-cell">
+        <div class="dbrz-vde-general-container" style="height: 100%;">
+          <div class="dbrz-vde-presentation-text-informal">Dynamic part of the dictionary (pos - entry)</div>
+          <div id="dbrzVDEPresentationTempEnt" class="d-block p-0 m-0 dbrz-vde-presentation-text-content"></div>
+        </div>
       </div>
-      <div class="col-12 col-lg-4 dbrz-vde-fix-height-container dbrz-vde-fix-max-height border border-white border-top-1 border-end-0 border-start-0 border-bottom-0 dbrz-vde-content-cell">
-        <span class="dbrz-vde-presentation-text-informal">Issued indices:</span>
-        <span id="dbrzVDEPresentationOutput" class="d-block p-0 m-0 dbrz-vde-presentation-text-content"></span>
+      <div class="col-12 col-lg-4 dbrz-vde-fix-height-container dbrz-vde-fix-max-height border border-white border-0 dbrz-vde-content-cell">
+        <div class="dbrz-vde-general-container" style="height: 100%;">
+          <div class="dbrz-vde-presentation-text-informal">Issued indices</div>
+          <div id="dbrzVDEPresentationOutput" class="d-block p-0 m-0 dbrz-vde-presentation-text-content"></div>
+        </div>
       </div>
     </div>
   </div>

@@ -24,6 +24,7 @@ class dbrzVDEManager {
     this.dbrzVDEPTDictionary = new dbrzVDEPresentationTextual("dbrzVDEPresentationDictionary");
     this.dbrzVDEPTLM = new dbrzVDEPresentationTextual("dbrzVDEPresentationLM");
     this.dbrzVDEPTDE = new dbrzVDEPresentationTextual("dbrzVDEPresentationTempEnt", true, new dbrzVDEPreprocessorNLSQN());
+    this.dbrzVDEPTCCR = new dbrzVDEPresentationTextual("dbrzVDEPresentationCCR", true, new dbrzVDEPreprocessorCCCR());
 
     this.dbrzVDEE.subscribe('checkpointDescription', this.dbrzVDEPTTextProcessing);
 
@@ -31,6 +32,10 @@ class dbrzVDEManager {
     this.dbrzVDEE.subscribe('encodedId', this.dbrzVDEPM);
     this.dbrzVDEE.subscribe('longestEntryFound', this.dbrzVDEPM);
     this.dbrzVDEE.subscribe('reset', this.dbrzVDEPM);
+
+    this.dbrzVDEE.subscribe('progressCounter', this.dbrzVDEPTCCR);
+    this.dbrzVDEE.subscribe('longestEntryFound', this.dbrzVDEPTCCR);
+    this.dbrzVDEE.subscribe('reset', this.dbrzVDEPTCCR);
 
     this.dbrzVDEE.subscribe('encodedId', this.dbrzVDEPEV);
     this.dbrzVDEE.subscribe('reset', this.dbrzVDEPEV);

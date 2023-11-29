@@ -29,14 +29,18 @@
   min-height: 12vh;
 }
 
+.dbrz-vde-general-container {
+  height: 100%;
+  background-color: #1f293f;
+}
+
 .dbrz-vde-fix-height-container {
   min-height: 12vh;
 }
 
 .dbrz-vde-fix-max-height {
   max-height: 30vh;
-  overflow: auto;
-  /*overflow: scroll;*/
+  /*overflow: auto;*/
 }
 
 .dbrz-vde-content-cell {
@@ -58,19 +62,18 @@
   font-weight: 300;
   font-family: 'Lato Light';
   letter-spacing: 0.1em;
-  /*font-family: 'Courier New', Courier, monospace;*/
   color: #00ffff;
   background-color: #181f33;
-  /*color: #57ffdc;*/
-  /*color: #fff;*/
 }
 
 .dbrz-vde-presentation-text-content {
+  padding: 10px!important;
+  overflow: auto;
   font-weight: 200;
   font-size: medium;
   font-family: monospace;
-  /*font-family: 'Courier New', Courier, monospace;*/
   color: #fff;
+  background-color: #1f293f;
 }
 
 .dbrz-vde-button {
