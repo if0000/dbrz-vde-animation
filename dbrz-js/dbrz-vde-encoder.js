@@ -195,9 +195,11 @@ class dbrzVDEEncoder {
         this.checkpointDescription = "03 - Before decide if the domain is still the static part of the dictionary or the dynamic one.";
         this.notifySubs(['checkpointDescription', 'progressCounter', 'distance', 'temporaryEntry', 'longestMatchingEntry', 'positionMatchPointer', 'encodedId']);
 
+        //
         //  Here we can decide if we should start the virtual word search
         //  or we are still in the domain of static part.
         //  This should highly simplify the virtual part
+        //
         if (this.positonMatchPointer < this.acceptedCharacters.length) {
 
           this.longestMatchingEntry = this.longestMatchingEntry + this.temporaryEntry;
@@ -205,7 +207,9 @@ class dbrzVDEEncoder {
 
           if(!this.dictionaryAux.has(this.longestMatchingEntry)) {
 
-            //Implementation of the limited dictionary size
+            //
+            // Implementation of the limited dictionary size
+            //
             if(this.dictionary.length < (this.dictDynSize + this.acceptedCharacters.length)) {
               this.nextEntryPos = this.dictionary.length;
               this.dictionary[this.nextEntryPos] = this.longestMatchingEntry;
@@ -303,11 +307,21 @@ class dbrzVDEEncoder {
               //
               if(this.dictionary.length < (this.dictDynSize + this.acceptedCharacters.length)) {
                 //
-                //  For proper dictionary building the virtual word based duplicated entries should be allowed, but current MAP based aux data structure prevents and mess up this operation: 
-                //    according to the current implementation, during the lookup it redirects the position and overwrite takes place in the dictionaryAux. 
-                //    Therefore, during the neighborhood lookup it might give back false info, additionally the dictionary chaining also might break.
-                //    
-                //  Until that at the decoding side it must handle correctly if the dictionary is not full yet, but the previously given index is a primary position such a way that the actual index first char differs from the prev index last char.
+                //
+                //  SIMPLE SOLUTION: 
+                //    In case of this situation takes place it means that finally - after the primary, then composite virtual construction - a 'very long' (a.k.a. constructed) primary entry has been found.
+                //    This is good. It may happen that this preceeds or succeeds the original positionMatchPointer. Whatever the situation is it can be handled in that way as it would be just a simple primary entry found so far:
+                //     - the entire composed word so far has to be passed to this.temporaryEntry,
+                //     - every virtual mode related settings have to be reseted (this.virtualMode, this.j, this.distance, this.subsEntryUnderInvestigation, etc),
+                //     - proper settings of the progressCounter,
+                //     - continue the searching for an even longer match.
+                //
+                //  OUTDATED:
+                //    For proper dictionary building the virtual word based duplicated entries should be allowed, but current MAP based aux data structure prevents and mess up this operation: 
+                //      according to the current implementation, during the lookup it redirects the position and overwrite takes place in the dictionaryAux. 
+                //      Therefore, during the neighborhood lookup it might give back false info, additionally the dictionary chaining also might break.
+                //      
+                //    Until that at the decoding side it must handle correctly if the dictionary is not full yet, but the previously given index is a primary position such a way that the actual index first char differs from the prev index last char.
                 //
                 //this.nextEntryPos = this.dictionary.length;
                 //this.dictionary[this.nextEntryPos] = this.longestMatchingEntry;
