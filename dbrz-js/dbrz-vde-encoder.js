@@ -203,12 +203,11 @@ class dbrzVDEEncoder {
 
           if(!this.dictionaryAux.has(this.longestMatchingEntry)) {
 
-            //#FIXME - implementation of the limited dictionary size
+            //Implementation of the limited dictionary size
             if(this.dictionary.length < (this.dictDynSize + this.acceptedCharacters.length)) {
               this.nextEntryPos = this.dictionary.length;
               this.dictionary[this.nextEntryPos] = this.longestMatchingEntry;
               this.dictionaryAux.set(this.longestMatchingEntry, this.nextEntryPos);
-              //FIXME - separation of the dictionary writing from finding and issuing the longest match
               this.dynamicEntry = this.longestMatchingEntry;
               this.notifySubs(['dynamicEntry']);
             }
@@ -219,7 +218,7 @@ class dbrzVDEEncoder {
 
           this.checkpointDescription = "04 - Static part: two letters long word is written into the dictionary.";
           this.notifySubs(['checkpointDescription', 'progressCounter', 'distance', 'temporaryEntry', 'longestMatchingEntry', 'positionMatchPointer', 'encodedId']);
-          //FIXME - separation of the dictionary writing from finding and issuing the longest match
+
           this.longestEntryFound = this.longestMatchingEntry;
           this.notifySubs(['longestEntryFound']);
 
@@ -270,12 +269,12 @@ class dbrzVDEEncoder {
 
             if(!this.dictionaryAux.has(this.longestMatchingEntry)) {
 
-              //#FIXME - implementation of the limited dictionary size
+              //Implementation of the limited dictionary size
               if(this.dictionary.length < (this.dictDynSize + this.acceptedCharacters.length)) {
                 this.nextEntryPos = this.dictionary.length;
                 this.dictionary[this.nextEntryPos] = this.longestMatchingEntry;
                 this.dictionaryAux.set(this.longestMatchingEntry, this.nextEntryPos);
-                //FIXME - separation of the dictionary writing from finding and issuing the longest match
+
                 this.dynamicEntry = this.longestMatchingEntry;
                 this.notifySubs(['dynamicEntry']);
               }
@@ -283,11 +282,17 @@ class dbrzVDEEncoder {
   
             } else {
               this.encodedId = this.dictionaryAux.get(this.longestMatchingEntry);
-              //#FIXME - implementation of the limited dictionary size
+              //Implementation of the limited dictionary size
               if(this.dictionary.length < (this.dictDynSize + this.acceptedCharacters.length)) {
+                //
+                //  For proper dictionary building the virtual word based duplicated entries should be allowed, but current MAP based aux data structure prevents and mess up this operation: 
+                //    according to the current implementation, during the lookup it redirects the position and overwrite takes place in the dictionaryAux. 
+                //    Therefore, during the neighborhood lookup it might give back false info, additionally the dictionary chaining also might break.
+                //
                 //this.nextEntryPos = this.dictionary.length;
                 //this.dictionary[this.nextEntryPos] = this.longestMatchingEntry;
                 //this.dictionaryAux.set(this.longestMatchingEntry, this.nextEntryPos);
+                //
                 //this.dynamicEntry = this.longestMatchingEntry;
                 //this.notifySubs(['dynamicEntry']);
               }
@@ -295,7 +300,7 @@ class dbrzVDEEncoder {
 
             this.checkpointDescription = "06 - No more character match during virtual word composition. Index issue and dictionary update.";
             this.notifySubs(['checkpointDescription', 'progressCounter', 'distance', 'temporaryEntry', 'longestMatchingEntry', 'positionMatchPointer', 'encodedId']);
-            //FIXME - separation of the dictionary writing from finding and issuing the longest match
+
             this.longestEntryFound = this.longestMatchingEntry;
             this.notifySubs(['longestEntryFound']);
 
@@ -336,12 +341,11 @@ class dbrzVDEEncoder {
 
         if(!this.dictionaryAux.has(this.longestMatchingEntry)) {
 
-          //#FIXME - implementation of the limited dictionary size
+          //Implementation of the limited dictionary size
           if(this.dictionary.length < (this.dictDynSize + this.acceptedCharacters.length)) {
             this.nextEntryPos = this.dictionary.length;
             this.dictionary[this.nextEntryPos] = this.longestMatchingEntry;
             this.dictionaryAux.set(this.longestMatchingEntry, this.nextEntryPos);
-            //FIXME - separation of the dictionary writing from finding and issuing the longest match
             this.dynamicEntry = this.longestMatchingEntry;
             this.notifySubs(['dynamicEntry']);
           }
@@ -353,10 +357,9 @@ class dbrzVDEEncoder {
         this.checkpointDescription = "09 - No more possibility to chaining, since no more primary entries in the dictionary.";
         this.notifySubs(['checkpointDescription', 'progressCounter', 'distance', 'temporaryEntry', 'longestMatchingEntry', 'positionMatchPointer', 'encodedId']);
 
-        //FIXME - separation of the dictionary writing from finding and issuing the longest match
         this.longestEntryFound = this.longestMatchingEntry;
         this.notifySubs(['longestEntryFound']);
-        
+
         this.encodedId = -1;
         
         this.longestMatchingEntry = "";
@@ -385,12 +388,12 @@ class dbrzVDEEncoder {
 
         if(!this.dictionaryAux.has(this.longestMatchingEntry)) {
 
-          //#FIXME - implementation of the limited dictionary size
+          //Implementation of the limited dictionary size
           if(this.dictionary.length < (this.dictDynSize + this.acceptedCharacters.length)) {
             this.nextEntryPos = this.dictionary.length;
             this.dictionary[this.nextEntryPos] = this.longestMatchingEntry;
             this.dictionaryAux.set(this.longestMatchingEntry, this.nextEntryPos);
-            //FIXME - separation of the dictionary writing from finding and issuing the longest match
+
             this.dynamicEntry = this.longestMatchingEntry;
             this.notifySubs(['dynamicEntry']);
           }
@@ -402,7 +405,6 @@ class dbrzVDEEncoder {
         this.checkpointDescription = "11 - End of string but the state variables are not empty - after first swap and index calculation.";
         this.notifySubs(['checkpointDescription', 'progressCounter', 'distance', 'temporaryEntry', 'longestMatchingEntry', 'positionMatchPointer', 'encodedId']);
 
-        //FIXME - separation of the dictionary writing from finding and issuing the longest match
         this.longestEntryFound = this.longestMatchingEntry;
         this.notifySubs(['longestEntryFound']);
 
