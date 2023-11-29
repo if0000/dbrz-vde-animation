@@ -180,9 +180,11 @@ class dbrzVDEPresentationMetrics extends dbrzVDEInterfaceObserver {
         this.tempEncodedId = arguments[1];
       }
 
-      if(arguments[0] == "dynamicEntry") {
-        this.processedInputSize = this.tempProgressCounter;
-        this.encodedOutputSize = this.encodedOutputSize + 3;
+      //#FIXME - separation of the dictionary writing from finding and issuing the longest match
+      if(arguments[0] == "longestEntryFound") {
+      //if(arguments[0] == "dynamicEntry") {
+        this.processedInputSize = 7 * this.tempProgressCounter;
+        this.encodedOutputSize = this.encodedOutputSize + 21;
 
         this.ratio = this.encodedOutputSize / this.processedInputSize;
 

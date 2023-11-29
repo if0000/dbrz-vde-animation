@@ -29,7 +29,7 @@ class dbrzVDEManager {
 
     this.dbrzVDEE.subscribe('progressCounter', this.dbrzVDEPM);
     this.dbrzVDEE.subscribe('encodedId', this.dbrzVDEPM);
-    this.dbrzVDEE.subscribe('dynamicEntry', this.dbrzVDEPM);
+    this.dbrzVDEE.subscribe('longestEntryFound', this.dbrzVDEPM);
     this.dbrzVDEE.subscribe('reset', this.dbrzVDEPM);
 
     this.dbrzVDEE.subscribe('encodedId', this.dbrzVDEPEV);
