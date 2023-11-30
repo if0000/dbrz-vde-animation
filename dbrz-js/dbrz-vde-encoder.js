@@ -16,7 +16,7 @@
 class dbrzVDEEncoder {
   constructor() {
 
-    this.dictDynSize = 256;
+    this.dictDynSize = 128;
     this.allowedMaxOverflowAligner = 0;
     this.allowedMaxOverflow = this.dictDynSize - this.allowedMaxOverflowAligner;
 
@@ -250,9 +250,33 @@ class dbrzVDEEncoder {
                 this.notifySubs(['dynamicEntry']);
               }
               this.calculateVirtualIndex();
+
+              this.checkpointDescription = "06 - No more character match during virtual word composition. Index issue and dictionary update.";
+              this.notifySubs(['checkpointDescription', 'progressCounter', 'distance', 'temporaryEntry', 'longestMatchingEntry', 'positionMatchPointer', 'encodedId']);
+  
+              this.longestEntryFound = this.longestMatchingEntry;
+              this.notifySubs(['longestEntryFound']);
+  
+              this.encodedId = -1;
+  
+              this.longestMatchingEntry = "";
+              this.subsEntryUnderInvestigation = undefined;
+  
+              this.distance = 0;
+              this.virtualMode = false;
   
             } else {
-              this.encodedId = this.dictionaryAux.get(this.longestMatchingEntry);
+              //this.encodedId = this.dictionaryAux.get(this.longestMatchingEntry);
+
+              // 
+              //  It is provided here that temporaryEntry holds the required string without loss.
+              //
+              this.temporaryEntry = this.longestMatchingEntry;
+
+              this.subsEntryUnderInvestigation = undefined;
+  
+              this.distance = 0;
+              this.virtualMode = false;
 
               //
               // Implementation of the limited dictionary size
@@ -283,20 +307,6 @@ class dbrzVDEEncoder {
                 //this.notifySubs(['dynamicEntry']);
               }
             }
-
-            this.checkpointDescription = "06 - No more character match during virtual word composition. Index issue and dictionary update.";
-            this.notifySubs(['checkpointDescription', 'progressCounter', 'distance', 'temporaryEntry', 'longestMatchingEntry', 'positionMatchPointer', 'encodedId']);
-
-            this.longestEntryFound = this.longestMatchingEntry;
-            this.notifySubs(['longestEntryFound']);
-
-            this.encodedId = -1;
-
-            this.longestMatchingEntry = "";
-            this.subsEntryUnderInvestigation = undefined;
-
-            this.distance = 0;
-            this.virtualMode = false;
 
           }
 
