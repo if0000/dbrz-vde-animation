@@ -1,13 +1,15 @@
 
 .dbrz-vde-scrollbar {
-  /* width */
+  /* Width */
   ::-webkit-scrollbar {
     width: 3px;
   }
 
   /* Track */
   ::-webkit-scrollbar-track {
-    background: #f1f1f1; 
+    background: #181f33;
+    /*background: #1f293f;*/
+    /*background: #f1f1f1;*/
   }
  
   /* Handle */
@@ -25,32 +27,23 @@
   display: inline;
 }
 
-.dbrz-vde-input {
-  min-height: 12vh;
-}
-
 .dbrz-vde-general-container {
   height: 100%;
+  overflow: hidden;
   background-color: #1f293f;
 }
 
 .dbrz-vde-fix-height-container {
-  min-height: 12vh;
+  min-height: 15vh;
 }
 
-.dbrz-vde-fix-max-height {
+.dbrz-vde-content-scroll {
   max-height: 30vh;
-  /*overflow: auto;*/
+  overflow: auto;
 }
 
 .dbrz-vde-content-cell {
   padding: 10px;
-}
-
-.dbrz-vde-presentation-divider-border {
-  border-width: 1px !important;
-  border-style: solid !important;
-  border-color: #fff !important;
 }
 
 .dbrz-vde-presentation-text-informal {
@@ -68,12 +61,21 @@
 
 .dbrz-vde-presentation-text-content {
   padding: 10px!important;
-  overflow: auto;
+  display:block;
   font-weight: 200;
   font-size: medium;
   font-family: monospace;
   color: #fff;
   background-color: #1f293f;
+}
+
+.dbrz-vde-presentation-text-content-ccr {
+  padding: 10px!important;
+  font-size: 80px!important;
+  font-weight: 200!important;;
+  font-family: monospace!important;;
+  color: #fff!important;
+  background-color: #1f293f!important;;
 }
 
 .dbrz-vde-button {

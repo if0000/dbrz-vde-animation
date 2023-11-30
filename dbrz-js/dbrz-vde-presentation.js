@@ -163,14 +163,12 @@ class dbrzVDEPresentationMetrics extends dbrzVDEInterfaceObserver {
           fill: false
         }]
       },
-      backgroundColor: '#181f33',
       options: {
         legend: {display: false},
       }
     });
 
     this.dbrzVDEPCCCR = new dbrzVDEPreprocessorCCCR();
-    this.tempProgressCounter = 0;
     this.processedInputSize = 0;
   }
 
@@ -178,12 +176,12 @@ class dbrzVDEPresentationMetrics extends dbrzVDEInterfaceObserver {
     if(arguments.length > 1) {
 
       if(arguments[0] == "progressCounter") {
-        this.tempProgressCounter = arguments[1];
+
+        this.processedInputSize = arguments[1];
         this.dbrzVDEPCCCR.preProcess(arguments[0], arguments[1]);
       }
 
       if(arguments[0] == "longestEntryFound") {
-        this.processedInputSize = 7 * this.tempProgressCounter;
 
         this.chart.data.labels.push(this.processedInputSize);
         this.chart.data.datasets[0].data.push(this.dbrzVDEPCCCR.preProcess(arguments[0], arguments[1]).getResult());
@@ -197,7 +195,6 @@ class dbrzVDEPresentationMetrics extends dbrzVDEInterfaceObserver {
         this.chart.update();
     
         this.dbrzVDEPCCCR.reset();
-        this.tempProgressCounter = 0;
         this.processedInputSize = 0;
       }
     }
@@ -350,7 +347,7 @@ class dbrzVDEPreprocessorCCCR {
       this.processedInputSize = 7 * this.tempProgressCounter;
       this.encodedOutputSize = this.encodedOutputSize + 21;
 
-      this.ratio = (this.encodedOutputSize / this.processedInputSize);
+      this.ratio = (this.encodedOutputSize / this.processedInputSize).toFixed(2);
     }
 
     return this;
