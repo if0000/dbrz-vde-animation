@@ -26,10 +26,13 @@
     </div>
     <div class="row d-flex g-0 border border-white border-0">
       <div class="col-12 col-lg-6 dbrz-vde-fix-height-container dbrz-vde-content-cell border border-white border-0">
-        <div class="dbrz-vde-general-container">
-          <div class="dbrz-vde-presentation-text-informal">Your text comes here</div>
-          <div class="d-block p-0 m-0 dbrz-vde-content-scroll">
-            <textarea id="dbrzVDEPresentationInputField" class="dbrz-vde-presentation-text-content" placeholder="Write your content to be encoded here. It can contain characters exclusively from the 'Static alphabet'." style="width: 100%; min-height: 13vh; margin-top: 10px; margin-bottom: 10px; border: 0px;">
+        <div class="row d-flex g-0 border border-white border-0">
+          <div class="col-12">
+
+            <div class="dbrz-vde-general-container">
+              <div class="dbrz-vde-presentation-text-informal">Put your text here</div>
+              <div class="d-block p-0 m-0 dbrz-vde-content-scroll">
+                <textarea id="dbrzVDEPresentationInputField" class="dbrz-vde-presentation-text-content" placeholder="Write your content to be encoded here. It can contain characters exclusively from the 'Static alphabet'." style="width: 100%; min-height: 13vh; margin-top: 10px; margin-bottom: 10px; border: 0px;">
 I got my mind set on you
 I got my mind set on you
 I got my mind set on you
@@ -95,35 +98,55 @@ I got my mind set on you
 I got my mind set on you
 I got my mind set on you
 I got my mind set on you</textarea>
+              </div>
+            </div>
+          </div>
+          <div class="col-12">
+
+            <div class="col-lg-5 pt-3 d-flex justify-content-center justify-content-lg-start align-items-center align-items-stretch">
+              <button id="dbrzResetInitLoadBtn" class="dbrz-vde-controller dbrz-vde-controller-button">Feed the encoder</button>
+            </div>            
+
           </div>
         </div>
+        
       </div>
-      <div class="col-12 col-lg-6 border border-white border-0 dbrz-vde-fix-height-container dbrz-vde-text dbrz-vde-content-cell">
-        <div class="dbrz-vde-general-container">
-          <div class="dbrz-vde-presentation-text-informal">Encoder internal state</div>
-          <div class="p-0 m-0">
-            <span id="dbrzVDEPresentationInputString" class="dbrz-vde-presentation-text-content"></span>
+
+      <div class="col-12 col-lg-6 dbrz-vde-fix-height-container dbrz-vde-content-cell border border-white border-0">
+        <div class="row d-flex g-0 border border-white border-0">
+          <div class="col-12">
+
+            <div class="dbrz-vde-general-container">
+              <div class="dbrz-vde-presentation-text-informal">Encoder internal state</div>
+              <div class="p-0 m-0">
+                <span id="dbrzVDEPresentationInputString" class="dbrz-vde-presentation-text-content" style="width: 100%; min-height: 13vh; margin-top: 10px; margin-bottom: 10px;"></span>
+              </div>
+            </div>
+
+          </div>
+          <div class="col-12 d-block d-lg-flex">
+
+            <div class="col-12 col-lg-5 pt-3 d-flex justify-content-center align-items-center">
+              <button id="dbrzPlayPauseBtn" class="dbrz-vde-controller dbrz-vde-controller-button"><i class="bi bi-play dbrz-vde-controller-button-icon"></i><i class="bi bi-pause dbrz-vde-controller-button-icon"></i></button>
+            </div>
+
+            <div class="d-none d-lg-flex col-lg-2 pt-3"></div>
+
+            <div class="col-12 col-lg-5 pt-3 d-flex justify-content-center align-items-center ">
+              <div class="d-flex dbrz-vde-controller dbrz-vde-controller-button justify-content-center align-items-center">
+                <label for="dbrzAutomaticSpeed">Speed</label>&nbsp;<input id="dbrzAutomaticSpeed" type="range" name="dbrzAutomaticSpeed" min="0" max="500">
+              </div>
+            </div>
+
+            
+
           </div>
         </div>
       </div>
     </div>
     <div class="row d-flex g-0 dbrz-vde-controllers-container dbrz-vde-content-cell">
-      <div class="col-lg-3 p-3 d-flex justify-content-center justify-content-lg-start align-items-center align-items-stretch">
-        <button id="dbrzResetBtn" class="dbrz-vde-controller dbrz-vde-controller-button"><i class="bi bi-arrow-clockwise dbrz-vde-controller-button-icon"></i></button><!-- <i class="bi bi-play dbrz-vde-controller-button-icon"></i><i class="bi bi-pause"></i> -->
-      </div>
-      <div class="col-lg-3 p-3 d-flex border border-white border-0 justify-content-center align-items-center align-items-stretch">
-        <div class="d-flex dbrz-vde-controller dbrz-vde-controller-button justify-content-center align-items-center">
-          <label for="dbrzInputText">Auto steps</label>&nbsp;<input id="dbrzAutomaticExecution" type="checkbox" checked>
-        </div>
-      </div>
-      <div class="col-lg-3 p-3 d-flex border border-white border-0 justify-content-center align-items-center align-items-stretch">
-        <div class="d-flex dbrz-vde-controller dbrz-vde-controller-button justify-content-center align-items-center">
-          <label for="dbrzAutomaticSpeed">Auto speed</label>&nbsp;<input id="dbrzAutomaticSpeed" type="range" name="dbrzAutomaticSpeed" min="0" max="500">
-        </div>
-      </div>
-      <div class="col-lg-3 p-3 d-flex justify-content-center justify-content-lg-end align-items-center align-items-stretch">
-        <button id="dbrzStepByStepBtn" class="dbrz-vde-controller dbrz-vde-controller-button"><i class="bi bi-play dbrz-vde-controller-button-icon"></i></button><!-- disabled <i class="bi bi-chevron-double-right"></i>  <i class="bi bi-box-arrow-in-right dbrz-vde-controller-button-icon"></i> -->
-      </div>
+
+
     </div>
     <div class="row d-flex g-0">
       <div class="col-12 col-lg-4 border border-white border-0 dbrz-vde-fix-height-container dbrz-vde-text dbrz-vde-content-cell">

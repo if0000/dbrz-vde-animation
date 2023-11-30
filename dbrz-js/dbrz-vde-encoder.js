@@ -23,41 +23,27 @@ class dbrzVDEEncoder {
     //
     //  Event listener should be attached once, even if reset takes place.
     //
-    this.elementEventAttached = document.getElementById("dbrzStepByStepBtn");
-    this.elementEventAttached.addEventListener("click", () => {
-      //if (this.stepBystep) {
-        if(typeof this.outsourcedResolve === "function") {
-          this.outsourcedResolve("Resolved");
-        } 
-      //} else {
-      //  if (this.timerId == undefined) {
-      //    this.encodeController();
-      //  } else {
-      //    clearTimeout(this.timerId);
-      //    this.encodeController();
-      //  }
-      //}
-    });
-
-    this.elementResetEventAttached = document.getElementById("dbrzResetBtn");
+    this.elementResetEventAttached = document.getElementById("dbrzResetInitLoadBtn");
     this.elementResetEventAttached.addEventListener("click", () => {
       this.resetWithNewInput();
     });
-    
-    this.elemntInputField = document.getElementById("dbrzVDEPresentationInputField");
 
-    this.elementAutomaticExecution = document.getElementById("dbrzAutomaticExecution");
-    this.elementAutomaticExecution.addEventListener("click", () => {
-      if(this.elementAutomaticExecution.checked == true) {
-        this.stepBystep = false;
-      } else {
-        this.stepBystep = true;
-      }
+    this.elementEventAttached = document.getElementById("dbrzPlayPauseBtn");
+    this.elementEventAttached.addEventListener("click", () => {
+      if(typeof this.outsourcedResolve === "function") {
+        this.stepBystep = !this.stepBystep;
+        this.outsourcedResolve("Resolved");
+      } 
     });
 
     this.elementAutomaticSpeed = document.getElementById("dbrzAutomaticSpeed");
+    
+    this.elemntInputField = document.getElementById("dbrzVDEPresentationInputField");
 
-    this.encoderReset();
+    this.listOfObservedValues = new Map();
+    this.presetObservables();
+
+    this.encoderPartialReset()
   }
 
 
@@ -65,7 +51,7 @@ class dbrzVDEEncoder {
     this.encoderPartialReset();
     this.initDictionary("");
     this.setInputString(this.elemntInputField.value);
-    this.checkpointDescription = "00 - Initialized with the given input and settings. Now you are in the step-by-step mode. Further processing press the play button";
+    this.checkpointDescription = "00 - Initialized with the given input and settings. To start processing press the play button";
     this.notifySubs(['checkpointDescription']);
     this.encodeController();
   }
@@ -105,57 +91,11 @@ class dbrzVDEEncoder {
       clearTimeout(this.timerId);
     }
     this.timerId = undefined;
-    if(this.elementAutomaticExecution.checked == true) {
-      this.stepBystep = false;
-    } else {
-      this.stepBystep = true;
-    }
+
+    this.stepBystep = true;
 
     this.j = 0;
     this.subsEntryUnderInvestigation = undefined;
-  }
-
-
-  encoderReset() {
-
-    this.acceptedCharacters;
-
-    this.positonMatchPointer = 0;
-    this.distance = 0;
-
-    this.longestMatchingEntry;
-    this.temporaryEntry = "";
-    this.dynamicEntry = "";
-    this.virtualMode = false;
-
-    this.checkpointDescription = "";
-
-    this.string = "";
-    this.progressCounter = 0;
-
-    this.nextEntryPos = 0;
-    this.dictionary = [];
-    this.dictionaryAux = new Map();
-
-    this.relativeDist = -1;
-    this.encodedId = -1;
-
-    this.listOfObservedValues = new Map();
-    this.presetObservables();
-
-    if(this.timerId != undefined) {
-      clearTimeout(this.timerId);
-    }
-    this.timerId = undefined;
-    if(this.elementAutomaticExecution.checked == true) {
-      this.stepBystep = false;
-    } else {
-      this.stepBystep = true;
-    }
-
-    this.j = 0;
-    this.subsEntryUnderInvestigation = undefined;
-
   }
 
 
@@ -163,14 +103,6 @@ class dbrzVDEEncoder {
 
     this.string = input.replace(/[^0-9a-zA-ZáéíóöőúüűÁÉÍÓÖŐÚÜŰ\.\s,!\"\'\-\+\*\@\(\)\[\]]/g, "");
     this.notifySubs(["string"]);
-
-  }
-
-
-  encode(stepBystep) {
-
-    this.stepBystep = stepBystep;
-    this.encodeController();
 
   }
 
@@ -496,7 +428,7 @@ class dbrzVDEEncoder {
 
           this.temporaryEntry = "";
 
-          this.checkpointDescription = "14 - End of string and everything is empty. To restart press the reload button.";
+          this.checkpointDescription = "14 - End of string and everything is empty. To restart press the 'Feed the encoder' button.";
           this.notifySubs(['checkpointDescription', 'progressCounter', 'distance', 'temporaryEntry', 'longestMatchingEntry', 'positionMatchPointer', 'encodedId']);
 
           this.encodedId = -1;
@@ -565,11 +497,6 @@ class dbrzVDEEncoder {
       this.encodedId = ((this.relativeDist * (this.relativeDist + 1)) / 2) + this.distance + this.acceptedCharacters.length - 1;
 
     }
-  }
-
-
-  flushDictionary() {
-
   }
 
 
