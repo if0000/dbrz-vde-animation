@@ -77,7 +77,6 @@ class dbrzVDEEncoder {
   encoderPartialReset() {
 
     this.acceptedCharacters;
-    this.flushDictionary = true;
 
     this.positonMatchPointer = 0;
     this.distance = 0;
@@ -120,7 +119,6 @@ class dbrzVDEEncoder {
   encoderReset() {
 
     this.acceptedCharacters;
-    this.flushDictionary = true;
 
     this.positonMatchPointer = 0;
     this.distance = 0;
