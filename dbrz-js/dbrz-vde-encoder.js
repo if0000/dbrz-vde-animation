@@ -16,8 +16,7 @@
 class dbrzVDEEncoder {
   constructor() {
 
-    this.encoderReset();
-    this.dictDynSize = 129;
+    this.dictDynSize = 256;
     this.allowedMaxOverflowAligner = 0;
     this.allowedMaxOverflow = this.dictDynSize - this.allowedMaxOverflowAligner;
 
@@ -26,9 +25,18 @@ class dbrzVDEEncoder {
     //
     this.elementEventAttached = document.getElementById("dbrzStepByStepBtn");
     this.elementEventAttached.addEventListener("click", () => {
-      if(typeof this.outsourcedResolve === "function") {
-        this.outsourcedResolve("Resolved");
-      }
+      //if (this.stepBystep) {
+        if(typeof this.outsourcedResolve === "function") {
+          this.outsourcedResolve("Resolved");
+        } 
+      //} else {
+      //  if (this.timerId == undefined) {
+      //    this.encodeController();
+      //  } else {
+      //    clearTimeout(this.timerId);
+      //    this.encodeController();
+      //  }
+      //}
     });
 
     this.elementResetEventAttached = document.getElementById("dbrzResetBtn");
@@ -39,8 +47,17 @@ class dbrzVDEEncoder {
     this.elemntInputField = document.getElementById("dbrzVDEPresentationInputField");
 
     this.elementAutomaticExecution = document.getElementById("dbrzAutomaticExecution");
+    this.elementAutomaticExecution.addEventListener("click", () => {
+      if(this.elementAutomaticExecution.checked == true) {
+        this.stepBystep = false;
+      } else {
+        this.stepBystep = true;
+      }
+    });
 
     this.elementAutomaticSpeed = document.getElementById("dbrzAutomaticSpeed");
+
+    this.encoderReset();
   }
 
 
@@ -48,12 +65,9 @@ class dbrzVDEEncoder {
     this.encoderPartialReset();
     this.initDictionary("");
     this.setInputString(this.elemntInputField.value);
-    this.checkpointDescription = "00 - Reset.";
-    if(this.elementAutomaticExecution.checked == true) {
-      this.encode(false);
-    } else {
-      this.encode(true);
-    }
+    this.checkpointDescription = "00 - Initialized with the given input and settings. Now you are in the step-by-step mode. Further processing press the play button";
+    this.notifySubs(['checkpointDescription']);
+    this.encodeController();
   }
 
   //
@@ -82,8 +96,9 @@ class dbrzVDEEncoder {
     this.dictionary = [];
     this.dictionaryAux = new Map();
     
-    this.reset = "";
-    this.notifySubs(['reset']);
+    //this.reset = "";
+    this.checkpointDescription = "00 - Initialized with the given input and settings. Now you are in the step-by-step mode. For further processing press the play button";
+    this.notifySubs(['checkpointDescription', 'reset']);
 
     this.relativeDist = -1;
     this.encodedId = -1;
@@ -92,7 +107,11 @@ class dbrzVDEEncoder {
       clearTimeout(this.timerId);
     }
     this.timerId = undefined;
-    this.stepBystep = true;
+    if(this.elementAutomaticExecution.checked == true) {
+      this.stepBystep = false;
+    } else {
+      this.stepBystep = true;
+    }
 
     this.j = 0;
     this.subsEntryUnderInvestigation = undefined;
@@ -131,7 +150,11 @@ class dbrzVDEEncoder {
       clearTimeout(this.timerId);
     }
     this.timerId = undefined;
-    this.stepBystep = true;
+    if(this.elementAutomaticExecution.checked == true) {
+      this.stepBystep = false;
+    } else {
+      this.stepBystep = true;
+    }
 
     this.j = 0;
     this.subsEntryUnderInvestigation = undefined;
@@ -165,7 +188,7 @@ class dbrzVDEEncoder {
         await new Promise((resolve, reject) => {this.timerId = setTimeout(resolve, (this.elementAutomaticSpeed.max - this.elementAutomaticSpeed.value))});
         this.encodeInAsyncEnv();
       }
-    } 
+    }
   }
 
 
@@ -476,7 +499,7 @@ class dbrzVDEEncoder {
 
           this.temporaryEntry = "";
 
-          this.checkpointDescription = "14 - End of string and everything is empty";
+          this.checkpointDescription = "14 - End of string and everything is empty. To restart press the reload button.";
           this.notifySubs(['checkpointDescription', 'progressCounter', 'distance', 'temporaryEntry', 'longestMatchingEntry', 'positionMatchPointer', 'encodedId']);
 
           this.encodedId = -1;

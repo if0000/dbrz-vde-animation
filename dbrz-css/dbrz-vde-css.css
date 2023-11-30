@@ -40,6 +40,7 @@
 .dbrz-vde-content-scroll {
   max-height: 30vh;
   overflow: auto;
+  overflow-x: hidden;
 }
 
 .dbrz-vde-content-cell {
@@ -73,18 +74,29 @@
 .dbrz-vde-presentation-text-content-ccr {
   padding: 10px!important;
   font-size: 80px!important;
-  font-weight: 200!important;;
-  font-family: monospace!important;;
+  font-weight: 100!important;;
+  font-family: 'Open Sans', 'Lato Light' !important;;
   color: #fff!important;
   background-color: #1f293f!important;;
 }
 
-.dbrz-vde-button {
-  border-width: 0px;
+.dbrz-vde-controller {
+  width: 100%;
   padding: 10px;
   font-weight: 500;
-  font-family: 'Open Sans', 'Lato', 'Lato Light';
-  letter-spacing: 0.2em;
+  font-family: 'Open Sans', 'Lato', 'Lato Light';  
   background-color: #0097ee;
+}
+
+.dbrz-vde-controller-button {
+  border-width: 0px;
+  font-weight: 500;
+  font-family: 'Open Sans', 'Lato', 'Lato Light';
+  font-size: large;
+  letter-spacing: 0.2em;
   color: #fff;
+}
+
+.dbrz-vde-controller-button-icon {
+  font-size: large;
 }

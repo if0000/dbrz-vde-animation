@@ -27,6 +27,7 @@ class dbrzVDEManager {
     this.dbrzVDEPTCCR = new dbrzVDEPresentationTextual("dbrzVDEPresentationCCR", true, new dbrzVDEPreprocessorCCCR());
 
     this.dbrzVDEE.subscribe('checkpointDescription', this.dbrzVDEPTTextProcessing);
+    this.dbrzVDEE.subscribe('reset', this.dbrzVDEPTTextProcessing);
 
     this.dbrzVDEE.subscribe('progressCounter', this.dbrzVDEPM);
     this.dbrzVDEE.subscribe('encodedId', this.dbrzVDEPM);
@@ -41,14 +42,17 @@ class dbrzVDEManager {
     this.dbrzVDEE.subscribe('reset', this.dbrzVDEPEV);
 
     this.dbrzVDEE.subscribe('dictionary', this.dbrzVDEPTDictionary);
+    this.dbrzVDEE.subscribe('reset', this.dbrzVDEPTDictionary);
 
     this.dbrzVDEE.subscribe('longestMatchingEntry', this.dbrzVDEPTLM);
+    this.dbrzVDEE.subscribe('reset', this.dbrzVDEPTLM);
 
     this.dbrzVDEE.subscribe('dynamicEntry', this.dbrzVDEPTDE);
     this.dbrzVDEE.subscribe('reset', this.dbrzVDEPTDE);
 
     this.dbrzVDEE.subscribe('string', this.dbrzVDEPIP);
     this.dbrzVDEE.subscribe('progressCounter', this.dbrzVDEPIP);
+    this.dbrzVDEE.subscribe('reset', this.dbrzVDEPIP);
 
     //
     //  These methods should be wire out to the UI

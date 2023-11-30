@@ -6,11 +6,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="vendor.css">
   <link rel="stylesheet" href="dbrz-css/dbrz-vde-css.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+  <script src="https://kit.fontawesome.com/60627820de.js" crossorigin="anonymous"></script>
   
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
-  <!--
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
 </head>
 <body style="background-color: #181f33;">
   <!--Start of main bootstrap container-->
@@ -109,15 +108,21 @@ I got my mind set on you</textarea>
       </div>
     </div>
     <div class="row d-flex g-0 dbrz-vde-controllers-container dbrz-vde-content-cell">
-      <div class="col-lg-4 p-3 d-flex justify-content-center align-items-center">
-        <button id="dbrzResetBtn" class="dbrz-vde-button">Start encoder</button>
+      <div class="col-lg-3 p-3 d-flex justify-content-center justify-content-lg-start align-items-center align-items-stretch">
+        <button id="dbrzResetBtn" class="dbrz-vde-controller dbrz-vde-controller-button"><i class="bi bi-arrow-clockwise dbrz-vde-controller-button-icon"></i></button><!-- <i class="bi bi-play dbrz-vde-controller-button-icon"></i><i class="bi bi-pause"></i> -->
       </div>
-      <div class="col-lg-4 p-3 d-flex justify-content-center align-items-center">
-        <label class="dbrz-vde-presentation-text-informal" for="dbrzInputText">Auto steps</label>&nbsp;<input id="dbrzAutomaticExecution" class="dbrz-vde-presentation-text-informal" type="checkbox"><br />
-        <label class="dbrz-vde-presentation-text-informal" for="dbrzAutomaticSpeed">Auto speed</label>&nbsp;<input id="dbrzAutomaticSpeed" type="range" name="dbrzAutomaticSpeed" min="0" max="500">
+      <div class="col-lg-3 p-3 d-flex border border-white border-0 justify-content-center align-items-center align-items-stretch">
+        <div class="d-flex dbrz-vde-controller dbrz-vde-controller-button justify-content-center align-items-center">
+          <label for="dbrzInputText">Auto steps</label>&nbsp;<input id="dbrzAutomaticExecution" type="checkbox" checked>
+        </div>
       </div>
-      <div class="col-lg-4 p-3 d-flex justify-content-center align-items-center">
-        <button id="dbrzStepByStepBtn" class="dbrz-vde-button">Manual step -></button>
+      <div class="col-lg-3 p-3 d-flex border border-white border-0 justify-content-center align-items-center align-items-stretch">
+        <div class="d-flex dbrz-vde-controller dbrz-vde-controller-button justify-content-center align-items-center">
+          <label for="dbrzAutomaticSpeed">Auto speed</label>&nbsp;<input id="dbrzAutomaticSpeed" type="range" name="dbrzAutomaticSpeed" min="0" max="500">
+        </div>
+      </div>
+      <div class="col-lg-3 p-3 d-flex justify-content-center justify-content-lg-end align-items-center align-items-stretch">
+        <button id="dbrzStepByStepBtn" class="dbrz-vde-controller dbrz-vde-controller-button"><i class="bi bi-play dbrz-vde-controller-button-icon"></i></button><!-- disabled <i class="bi bi-chevron-double-right"></i>  <i class="bi bi-box-arrow-in-right dbrz-vde-controller-button-icon"></i> -->
       </div>
     </div>
     <div class="row d-flex g-0">
@@ -147,7 +152,7 @@ I got my mind set on you</textarea>
     <div class="row d-flex g-0">
       <div class="col-12 col-lg-4 dbrz-vde-fix-height-container border border-white border-0 dbrz-vde-content-cell">
         <div class="dbrz-vde-general-container">
-          <div class="dbrz-vde-presentation-text-informal">Current status during input processing</div>
+          <div class="dbrz-vde-presentation-text-informal">Input processing status</div>
           <div class="d-block p-0 m-0 dbrz-vde-content-scroll">
             <span id="dbrzVDEPresentationInputProcessing" class="dbrz-vde-presentation-text-content"></span>
           </div>
@@ -155,7 +160,7 @@ I got my mind set on you</textarea>
       </div>
       <div class="col-12 col-lg-4 dbrz-vde-fix-height-container border border-white border-0 dbrz-vde-content-cell">
         <div class="dbrz-vde-general-container">
-          <div class="dbrz-vde-presentation-text-informal">Dynamic part of the dictionary (pos - entry)</div>
+          <div class="dbrz-vde-presentation-text-informal">Dynamic part of the dictionary</div>
           <div class="p-0 m-0 dbrz-vde-content-scroll">
             <span id="dbrzVDEPresentationTempEnt" class="dbrz-vde-presentation-text-content"></span>
           </div>

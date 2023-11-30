@@ -243,6 +243,7 @@ class dbrzVDEPresentationTextual extends dbrzVDEInterfaceObserver {
         if(this.preProcessing) {
           this.preProcessorObject.reset();
         }
+        this.dbrzPresentationTextualContainer.innerHTML = "";
       } else {
         if(this.preProcessing) {
           this.dbrzPresentationTextualContainer.innerHTML = this.preProcessorObject.preProcess(arguments[0], arguments[1]).getResult();
