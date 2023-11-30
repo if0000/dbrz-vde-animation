@@ -62,6 +62,7 @@
 .dbrz-vde-presentation-text-content {
   padding: 10px!important;
   display:block;
+  min-height: 13vh;
   font-weight: 200;
   font-size: medium;
   font-family: monospace;
