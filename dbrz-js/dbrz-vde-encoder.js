@@ -96,7 +96,6 @@ class dbrzVDEEncoder {
     this.dictionary = [];
     this.dictionaryAux = new Map();
     
-    //this.reset = "";
     this.checkpointDescription = "00 - Initialized with the given input and settings. Now you are in the step-by-step mode. For further processing press the play button";
     this.notifySubs(['checkpointDescription', 'reset']);
 
