@@ -339,7 +339,7 @@ class dbrzVDEPreprocessorCCCR {
   constructor() {
     this.baseDictSize = 100;
     this.dictSize = 128;
-    this.valueToAdd = 21;
+    this.valueToAdd = 14;
     this.tempProgressCounter = 0;
     this.processedInputSize = 0;
     this.encodedOutputSize = 0;
@@ -372,7 +372,7 @@ class dbrzVDEPreprocessorCCCR {
 
   reset() {
     this.dictSize = 128;
-    this.valueToAdd = 21;
+    this.valueToAdd = 14;
     this.tempProgressCounter = 0;
     this.processedInputSize = 0;
     this.encodedOutputSize = 0;

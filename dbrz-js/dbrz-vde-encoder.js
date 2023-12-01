@@ -51,12 +51,14 @@ class dbrzVDEEncoder {
 
   resetWithNewInput() {
     this.dictDynSize = Number(this.elementDictSize.value);
-    this.notifySubs(['dictDynSize']);
     this.encoderPartialReset();
     this.initDictionary("");
     this.setInputString(this.elemntInputField.value);
     this.checkpointDescription = "00 - Initialized with the given input and settings. To start processing press the play button";
     this.notifySubs(['checkpointDescription']);
+
+    this.notifySubs(['dictDynSize']);
+
     this.encodeController();
   }
 
@@ -477,15 +479,15 @@ class dbrzVDEEncoder {
 
       } else {
 
-        this.relativeDist = this.positonMatchPointer - this.acceptedCharacters.length;
-        this.encodedId = ((this.relativeDist * (this.relativeDist + 1)) / 2) + this.acceptedCharacters.length - 1;
+        this.relativeDist = this.positonMatchPointer - this.acceptedCharacters.length - 1;
+        this.encodedId = ((this.relativeDist * (this.relativeDist + 1)) / 2) + this.acceptedCharacters.length;
 
       }
 
     } else {
 
-      this.relativeDist = this.positonMatchPointer + this.distance - this.acceptedCharacters.length;
-      this.encodedId = ((this.relativeDist * (this.relativeDist + 1)) / 2) + this.distance + this.acceptedCharacters.length - 1;
+      this.relativeDist = this.positonMatchPointer + this.distance - this.acceptedCharacters.length - 1;
+      this.encodedId = ((this.relativeDist * (this.relativeDist + 1)) / 2) + this.distance + this.acceptedCharacters.length;
 
     }
   }
