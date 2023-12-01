@@ -12,8 +12,6 @@
 //  - measurements and metrics to display,
 //  - control buttons.
 //
-//  Basically the measurement and metrics elements sould be svg based.
-//
 
 //import {dbrzVDEInterfaceObserver} from "./dbrz-vde-interface.js";
 
@@ -325,13 +323,10 @@ class dbrzVDEPreprocessorKF {
 //  Computes Current Compression Ratio
 //  This is used as a common source of truth.
 //
-// 'progressCounter' is propagated more frequently than real dictionary update.
-// Therefore value from this is temporarily stored in the local progressCounter.
-// However, it's value is used only when the 'longestEntryFound' event takes place. 
-// Actually, that event serves as a trigger.
-//
-// During the ration computing (this.encodedOutputSize = this.encodedOutputSize + 3;):
-// +3 is applied since if all characters in the dictionary static part can be represented with 8 bits and the dynamic part can contain 256 primary entries. The total number of primary and virtual entries in the dynamic part can be expressed as 256*257/2 = 32896, which requires 16bits. So, the full addressing requires 8 + 16 = 24bits = 3 bytes. As an alternative by limiting the number of primary entries by one the dynamic addressing would decresing with one bit.
+//  'progressCounter' is propagated more frequently than real dictionary update.
+//  Therefore value from this is temporarily stored in the local progressCounter.
+//  However, it's value is used only when the 'longestEntryFound' event takes place. 
+//  Actually, that event serves as a trigger.
 //
 //
 class dbrzVDEPreprocessorCCCR {
