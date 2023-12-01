@@ -175,6 +175,10 @@ class dbrzVDEPresentationMetrics extends dbrzVDEInterfaceObserver {
   update() {
     if(arguments.length > 1) {
 
+      if(arguments[0] == "dictDynSize") {
+        this.dbrzVDEPCCCR.preProcess(arguments[0], arguments[1]);
+      }
+
       if(arguments[0] == "progressCounter") {
 
         this.processedInputSize = arguments[1];
@@ -333,6 +337,9 @@ class dbrzVDEPreprocessorKF {
 class dbrzVDEPreprocessorCCCR {
 
   constructor() {
+    this.baseDictSize = 100;
+    this.dictSize = 128;
+    this.valueToAdd = 21;
     this.tempProgressCounter = 0;
     this.processedInputSize = 0;
     this.encodedOutputSize = 0;
@@ -340,13 +347,18 @@ class dbrzVDEPreprocessorCCCR {
   }
 
   preProcess(inp1, inp2) {
+    if(inp1 == "dictDynSize") {
+      this.dictSize = Number(inp2);
+      this.valueToAdd = Math.ceil(Math.log2(this.baseDictSize + (((this.dictSize) * (this.dictSize + 1)) / 2)));
+    }
+
     if(inp1 == "progressCounter") {
       this.tempProgressCounter = inp2;
     }
 
     if(inp1 == "longestEntryFound") {
       this.processedInputSize = 7 * this.tempProgressCounter;
-      this.encodedOutputSize = this.encodedOutputSize + 21;
+      this.encodedOutputSize = this.encodedOutputSize + this.valueToAdd;
 
       this.ratio = (this.encodedOutputSize / this.processedInputSize).toFixed(2);
     }
@@ -359,6 +371,8 @@ class dbrzVDEPreprocessorCCCR {
   }
 
   reset() {
+    this.dictSize = 128;
+    this.valueToAdd = 21;
     this.tempProgressCounter = 0;
     this.processedInputSize = 0;
     this.encodedOutputSize = 0;

@@ -29,11 +29,13 @@ class dbrzVDEManager {
     this.dbrzVDEE.subscribe('checkpointDescription', this.dbrzVDEPTTextProcessing);
     this.dbrzVDEE.subscribe('reset', this.dbrzVDEPTTextProcessing);
 
+    this.dbrzVDEE.subscribe('dictDynSize', this.dbrzVDEPM);
     this.dbrzVDEE.subscribe('progressCounter', this.dbrzVDEPM);
     this.dbrzVDEE.subscribe('encodedId', this.dbrzVDEPM);
     this.dbrzVDEE.subscribe('longestEntryFound', this.dbrzVDEPM);
     this.dbrzVDEE.subscribe('reset', this.dbrzVDEPM);
 
+    this.dbrzVDEE.subscribe('dictDynSize', this.dbrzVDEPTCCR);
     this.dbrzVDEE.subscribe('progressCounter', this.dbrzVDEPTCCR);
     this.dbrzVDEE.subscribe('longestEntryFound', this.dbrzVDEPTCCR);
     this.dbrzVDEE.subscribe('reset', this.dbrzVDEPTCCR);

@@ -1,7 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Roni Zongor / TECH</title>
+  <title>Roni Zongor / TECH - Virtual Dictionary Extension based lossless data compression simulator</title>
+  <meta name="author" content="Istvan Finta @ Roni Zongor & Co. / TECH - https://tech.ronizongor.com">
+  <!--
+    //
+    //  Author: Istvan Finta @ Roni Zongor & Co. / TECH
+    //  https://tech.ronizongor.com
+    //  v:1.0.0
+    //
+    //  LICENSE: GPLv3
+    //
+  -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="vendor.css">
@@ -28,7 +38,6 @@
       <div class="col-12 col-lg-6 dbrz-vde-fix-height-container dbrz-vde-content-cell border border-white border-0">
         <div class="row d-flex g-0 border border-white border-0">
           <div class="col-12">
-
             <div class="dbrz-vde-general-container">
               <div class="dbrz-vde-presentation-text-informal">Put your text here</div>
               <div class="d-block p-0 m-0 dbrz-vde-content-scroll">
@@ -102,52 +111,31 @@ I got my mind set on you</textarea>
             </div>
           </div>
           <div class="col-12">
-
             <div class="col-lg-5 pt-3 d-flex justify-content-center justify-content-lg-start align-items-center align-items-stretch">
               <button id="dbrzResetInitLoadBtn" class="dbrz-vde-controller dbrz-vde-controller-button">Feed the encoder</button>
             </div>            
-
           </div>
         </div>
-        
       </div>
-
       <div class="col-12 col-lg-6 dbrz-vde-fix-height-container dbrz-vde-content-cell border border-white border-0">
         <div class="row d-flex g-0 border border-white border-0">
           <div class="col-12">
-
             <div class="dbrz-vde-general-container">
               <div class="dbrz-vde-presentation-text-informal">Encoder internal state</div>
               <div class="p-0 m-0">
                 <span id="dbrzVDEPresentationInputString" class="dbrz-vde-presentation-text-content" style="width: 100%; min-height: 13vh; margin-top: 10px; margin-bottom: 10px;"></span>
               </div>
             </div>
-
           </div>
           <div class="col-12 d-block d-lg-flex">
-
             <div class="pt-3 me-3 d-flex justify-content-center align-items-center">
-            <!--
-            <div class="col-12 col-lg-5 pt-3 d-flex justify-content-center align-items-center">
-            -->
               <button id="dbrzPlayPauseBtn" class="dbrz-vde-controller dbrz-vde-controller-button"><i class="bi bi-play dbrz-vde-controller-button-icon"></i><i class="bi bi-pause dbrz-vde-controller-button-icon"></i></button>
             </div>
-
-            <!--
-            <div class="d-none d-lg-flex col-lg-2 pt-3"></div>
-            -->
-
             <div class="pt-3 d-flex justify-content-center align-items-center ">
-            <!--
-            <div class="col-12 col-lg-5 pt-3 d-flex justify-content-center align-items-center ">
-            -->
               <div class="d-flex dbrz-vde-controller dbrz-vde-controller-button justify-content-center align-items-center">
                 <label for="dbrzAutomaticSpeed">Speed</label>&nbsp;<input id="dbrzAutomaticSpeed" type="range" name="dbrzAutomaticSpeed" min="0" max="500">
               </div>
             </div>
-
-            
-
           </div>
         </div>
       </div>
@@ -205,6 +193,28 @@ I got my mind set on you</textarea>
           </div>
         </div>
       </div>
+    </div>
+    <!-- Additional settings -->
+    <div class="row d-flex g-0">
+
+      <div class="col-12 col-lg-4 pt-3 dbrz-vde-fix-height-container border border-white border-0 dbrz-vde-content-cell">
+        <div>
+          <div class="dbrz-vde-presentation-text-informal">Dynamic size of the dictionary<br />(effective after every re-feed)</div>
+          <div class="d-flex align-middle">
+            <button class="d-flex dbrz-vde-controller dbrz-vde-controller-button align-middle" style="width: 100%;"><input id="dbrzDictSize" type="range" name="dbrzDictSize" min="128" max="4096" value="128" style="width: 100%;"></button>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12 col-lg-4 pt-3 dbrz-vde-fix-height-container border border-white border-0 dbrz-vde-content-cell">
+        <div>
+          <div class="dbrz-vde-presentation-text-informal">Max. virtual extension<br/>(soon, max. by default)</div>
+          <div class="d-flex align-middle">
+            <button class="d-flex dbrz-vde-controller dbrz-vde-controller-button align-middle" style="width: 100%;"><input id="dbrzMaxVirtExt" type="range" name="dbrzMaxVirtExt" min="0" max="4096" value="4096" style="width: 100%;" disabled></button>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
   <!--Bundled Bootstrap-->
