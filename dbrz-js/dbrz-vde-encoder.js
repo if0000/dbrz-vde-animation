@@ -16,7 +16,7 @@
 class dbrzVDEEncoder {
   constructor() {
 
-    this.dictDynSize = 128;
+    this.dictDynSize = 257;
     this.allowedMaxOverflowAligner = 0;
     this.allowedMaxOverflow = this.dictDynSize - this.allowedMaxOverflowAligner;
 
