@@ -253,6 +253,8 @@ class dbrzVDEEncoder {
                 this.dynamicEntry = this.longestMatchingEntry;
                 this.notifySubs(['dynamicEntry']);
               }
+
+              this.distance = (this.distance - 1);
               this.calculateVirtualIndex();
 
               this.checkpointDescription = "06 - No more character match during virtual word composition. Index issue and dictionary update.";
@@ -477,14 +479,14 @@ class dbrzVDEEncoder {
 
       } else {
 
-        this.relativeDist = this.positonMatchPointer - this.acceptedCharacters.length - 1;
+        this.relativeDist = this.positonMatchPointer - this.acceptedCharacters.length;
         this.encodedId = ((this.relativeDist * (this.relativeDist + 1)) / 2) + this.acceptedCharacters.length;
 
       }
 
     } else {
 
-      this.relativeDist = this.positonMatchPointer + this.distance - this.acceptedCharacters.length - 1;
+      this.relativeDist = this.positonMatchPointer + this.distance - this.acceptedCharacters.length;
       this.encodedId = ((this.relativeDist * (this.relativeDist + 1)) / 2) + this.distance + this.acceptedCharacters.length;
 
     }

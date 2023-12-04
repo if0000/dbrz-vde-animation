@@ -332,7 +332,7 @@ class dbrzVDEPreprocessorKF {
 class dbrzVDEPreprocessorCCCR {
 
   constructor() {
-    this.baseDictSize = 105;
+    this.baseDictSize = 97;
     this.dictSize = 128;
     this.valueToAdd = 14;
     this.tempProgressCounter = 0;
