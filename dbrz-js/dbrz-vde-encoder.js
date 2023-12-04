@@ -37,6 +37,9 @@ class dbrzVDEEncoder {
     this.elementAutomaticSpeed = document.getElementById("dbrzAutomaticSpeed");
 
     this.elementDictSize = document.getElementById("dbrzDictSize");
+    this.elementDictSizeDisp = document.getElementById("dbrzDictSizeDispVal");
+
+    this.elementDictSize.addEventListener("change", () => {this.elementDictSizeDisp.innerHTML = this.elementDictSize.value})
     
     this.elemntInputField = document.getElementById("dbrzVDEPresentationInputField");
 
