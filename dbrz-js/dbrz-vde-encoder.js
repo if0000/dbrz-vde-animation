@@ -15,8 +15,7 @@ class dbrzVDEEncoder {
   constructor() {
 
     this.dictDynSize = 128;
-    this.allowedMaxOverflowAligner = 0;
-    this.allowedMaxOverflow = this.dictDynSize - this.allowedMaxOverflowAligner;
+    this.allowedMaxVirtualExtent = 128;
 
     //
     //  Event listener should be attached once, even if reset takes place.
@@ -39,7 +38,27 @@ class dbrzVDEEncoder {
     this.elementDictSize = document.getElementById("dbrzDictSize");
     this.elementDictSizeDisp = document.getElementById("dbrzDictSizeDispVal");
 
-    this.elementDictSize.addEventListener("change", () => {this.elementDictSizeDisp.innerHTML = this.elementDictSize.value})
+    this.elementVirtExt = document.getElementById("dbrzMaxVirtExt");
+    this.elementVirtExt.min = 0;
+    this.elementVirtExt.max = 128;
+    this.elementVirtExt.value = 128;
+
+    this.elementDictSize.addEventListener("change", () => {
+                                                            this.elementDictSizeDisp.innerHTML = this.elementDictSize.value;
+                                                            //
+                                                            //  Implementation of the Linear Growth Distance (LGD) functionality.
+                                                            //  Alignment of the extent of virtual extension to prevent values greater than the size of the dictionary.
+                                                            //
+                                                            if(Number(this.elementVirtExt.value) > Number(this.elementDictSize.value)) {
+                                                              this.elementVirtExt.max = Number(this.elementDictSize.value);
+                                                              this.elementVirtExt.value = Number(this.elementDictSize.value);
+                                                            } else {
+                                                              this.elementVirtExt.max = Number(this.elementDictSize.value);
+                                                            }
+                                                            
+                                                          })
+
+
     
     this.elemntInputField = document.getElementById("dbrzVDEPresentationInputField");
 
@@ -52,6 +71,7 @@ class dbrzVDEEncoder {
 
   resetWithNewInput() {
     this.dictDynSize = Number(this.elementDictSize.value);
+    this.allowedMaxVirtualExtent = Number(this.elementVirtExt.value);
     this.encoderPartialReset();
     this.initDictionary("");
     this.setInputString(this.elemntInputField.value);
@@ -205,8 +225,9 @@ class dbrzVDEEncoder {
 
       //
       //  The match is over the static part of the dictionary AND the subsequent entry exists.
+      //  The '&&  (this.distance < this.allowedMaxVirtualExtent)' condition is the implementation of the Linear Growth Distance (LGD) functionality, which serves as a good basis for ML, QC or any other multi dimensional based optimization procedure inline with dictionary restructing, dictionary flushing, extension positioning, etc.
       //
-      if((this.positonMatchPointer + this.distance) < this.dictionary.length) {
+      if(((this.positonMatchPointer + this.distance) < this.dictionary.length) &&  (this.distance < this.allowedMaxVirtualExtent)) {
 
         //
         //  The end of the subsequent word has NOT been reached yet.
