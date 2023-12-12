@@ -281,7 +281,7 @@ class dbrzVDEEncoder {
 
               this.distance = (this.distance - 1);
               //
-              //#FIXME - LGD proper handling of distance conditions during calculations
+              //Mixed mode calc alignment aid
               //
               this.calcState = 6;
               this.calculateVirtualIndex();
@@ -368,7 +368,7 @@ class dbrzVDEEncoder {
         }
 
         //
-        //#FIXME - LGD proper handling of distance conditions during calculations
+        //Mixed mode calc alignment aid
         //
         this.calcState = 9;
         this.calculateVirtualIndex();
@@ -425,7 +425,7 @@ class dbrzVDEEncoder {
         }
 
         //
-        //#FIXME - LGD proper handling of distance conditions during calculations
+        // Mixed mode calc alignment aid
         //
         this.calcState = 11;
         this.calculateVirtualIndex();
@@ -458,7 +458,7 @@ class dbrzVDEEncoder {
 
           this.positonMatchPointer = this.dictionaryAux.get(this.temporaryEntry);
           //
-          //#FIXME - LGD proper handling of distance conditions during calculations
+          // Mixed mode calc alignment aid
           //
           this.calcState = 14;
           this.calculateVirtualIndex();

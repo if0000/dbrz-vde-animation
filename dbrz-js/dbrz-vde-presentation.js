@@ -349,7 +349,6 @@ class dbrzVDEPreprocessorCCCR {
   preProcess(inp1, inp2) {
     if(inp1 == "dictDynSize") {
       this.dictSize = Number(inp2);
-      //this.valueToAdd = Math.ceil(Math.log2(this.baseDictSize + (((this.dictSize) * (this.dictSize + 1)) / 2)));
     }
 
     if(inp1 == "allowedMaxVirtualExtent") {
