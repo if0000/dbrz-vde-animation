@@ -44,6 +44,8 @@ class dbrzVDEEncoder {
     this.elementVirtExt.max = 128;
     this.elementVirtExt.value = 128;
 
+    this.elementVirtExtDisp = document.getElementById("dbrzAllMaxDispVal");
+
     this.elementDictSize.addEventListener("change", () => {
                                                             this.elementDictSizeDisp.innerHTML = this.elementDictSize.value;
                                                             //
@@ -53,12 +55,16 @@ class dbrzVDEEncoder {
                                                             if(Number(this.elementVirtExt.value) > Number(this.elementDictSize.value)) {
                                                               this.elementVirtExt.max = Number(this.elementDictSize.value);
                                                               this.elementVirtExt.value = Number(this.elementDictSize.value);
+                                                              this.elementVirtExtDisp.innerHTML = this.elementVirtExt.value;
                                                             } else {
                                                               this.elementVirtExt.max = Number(this.elementDictSize.value);
                                                             }
                                                             
-                                                          })
+                                                          });
 
+    this.elementVirtExt.addEventListener("change", () => {
+                                                            this.elementVirtExtDisp.innerHTML = this.elementVirtExt.value;
+                                                         });
 
     
     this.elemntInputField = document.getElementById("dbrzVDEPresentationInputField");
