@@ -16,6 +16,7 @@ class dbrzVDEEncoder {
 
     this.dictDynSize = 128;
     this.allowedMaxVirtualExtent = 128;
+    this.calcState = 0;
 
     //
     //  Event listener should be attached once, even if reset takes place.
@@ -279,7 +280,12 @@ class dbrzVDEEncoder {
               }
 
               this.distance = (this.distance - 1);
+              //
+              //#FIXME - LGD proper handling of distance conditions during calculations
+              //
+              this.calcState = 6;
               this.calculateVirtualIndex();
+              this.calcState = 0;
 
               this.checkpointDescription = "06 - No more character match during virtual word composition. Index issue and dictionary update.";
               this.notifySubs(['checkpointDescription', 'progressCounter', 'distance', 'temporaryEntry', 'longestMatchingEntry', 'positionMatchPointer', 'encodedId']);
@@ -361,7 +367,12 @@ class dbrzVDEEncoder {
 
         }
 
+        //
+        //#FIXME - LGD proper handling of distance conditions during calculations
+        //
+        this.calcState = 9;
         this.calculateVirtualIndex();
+        this.calcState = 0;
 
         this.checkpointDescription = "09 - No more possibility to chaining, since no more primary entries in the dictionary.";
         this.notifySubs(['checkpointDescription', 'progressCounter', 'distance', 'temporaryEntry', 'longestMatchingEntry', 'positionMatchPointer', 'encodedId']);
@@ -413,7 +424,12 @@ class dbrzVDEEncoder {
 
         }
 
+        //
+        //#FIXME - LGD proper handling of distance conditions during calculations
+        //
+        this.calcState = 11;
         this.calculateVirtualIndex();
+        this.calcState = 0;
 
         this.checkpointDescription = "11 - End of string but the state variables are not empty - after first swap and index calculation.";
         this.notifySubs(['checkpointDescription', 'progressCounter', 'distance', 'temporaryEntry', 'longestMatchingEntry', 'positionMatchPointer', 'encodedId']);
@@ -441,7 +457,12 @@ class dbrzVDEEncoder {
           this.notifySubs(['checkpointDescription', 'progressCounter', 'distance', 'temporaryEntry', 'longestMatchingEntry', 'positionMatchPointer', 'encodedId']);
 
           this.positonMatchPointer = this.dictionaryAux.get(this.temporaryEntry);
+          //
+          //#FIXME - LGD proper handling of distance conditions during calculations
+          //
+          this.calcState = 14;
           this.calculateVirtualIndex();
+          this.calcState = 0;
 
           this.temporaryEntry = "";
 
@@ -495,26 +516,146 @@ class dbrzVDEEncoder {
 
   calculateVirtualIndex() {
 
-    if(this.distance == 0) {
+    //
+    // I. No virtual index calculation needed, pure LZW mode.
+    //
+    if(this.allowedMaxVirtualExtent == 0) {
 
-      if(this.positonMatchPointer < this.acceptedCharacters.length) {
-        
-        this.encodedId = this.positonMatchPointer;
-
-      } else {
-
-        this.relativeDist = this.positonMatchPointer - this.acceptedCharacters.length;
-        this.encodedId = ((this.relativeDist * (this.relativeDist + 1)) / 2) + this.acceptedCharacters.length;
-
-      }
+      this.encodedId = this.positonMatchPointer;
 
     } else {
 
       this.relativeDist = this.positonMatchPointer + this.distance - this.acceptedCharacters.length;
-      this.encodedId = ((this.relativeDist * (this.relativeDist + 1)) / 2) + this.distance + this.acceptedCharacters.length;
 
+      //
+      // II. Pure VDE mode.
+      //
+      if(this.allowedMaxVirtualExtent == this.dictDynSize) {
+
+        if(this.positonMatchPointer < this.acceptedCharacters.length) {
+        
+          this.encodedId = this.positonMatchPointer;
+  
+        } else {
+
+          this.encodedId = this.acceptedCharacters.length + ((this.relativeDist * (this.relativeDist + 1)) / 2) + this.distance;
+
+        }
+
+      //
+      // III. Mixed mode.
+      //
+      //      0 < this.allowedMaxVirtualExtent < this.dictDynSize
+      //
+      } else {
+
+        //
+        //  #FIXME - From here the examination of calcState could be desired, since might require this.distance alignment
+        //
+
+        //
+        // III.1 - Pure VDE mode.
+        //
+        if(this.relativeDist < this.allowedMaxVirtualExtent) {
+
+          if(this.positonMatchPointer < this.acceptedCharacters.length) {
+        
+            this.encodedId = this.positonMatchPointer;
+    
+          } else {
+  
+            this.encodedId = this.acceptedCharacters.length + ((this.relativeDist * (this.relativeDist + 1)) / 2) + this.distance;
+  
+          }
+
+        }
+        //
+        // III.2 - Still pure VDE mode
+        //
+        if(this.relativeDist == this.allowedMaxVirtualExtent) {
+
+          this.encodedId = this.acceptedCharacters.length + ((this.relativeDist * (this.relativeDist + 1)) / 2) + this.distance;
+
+        }
+        //
+        // III.3 - Mixed mode: up to this.acceptedCharacters.length behaves just like VDE. Over that range it turns to a multiplication. 
+        //
+        if(this.relativeDist > this.allowedMaxVirtualExtent) {
+
+          let overRange = this.relativeDist - this.allowedMaxVirtualExtent;
+          this.encodedId = this.acceptedCharacters.length + ((this.allowedMaxVirtualExtent *  (this.allowedMaxVirtualExtent + 1)) / 2) + (overRange * this.allowedMaxVirtualExtent) + this.distance;
+
+        }
+
+      }
     }
   }
+
+
+  //calculateVirtualIndex() {
+  //
+  //  if(this.distance == 0) {
+  //
+  //    if(this.positonMatchPointer < this.acceptedCharacters.length) {
+  //      
+  //      this.encodedId = this.positonMatchPointer;
+  //
+  //    } else {
+  //
+  //      this.relativeDist = this.positonMatchPointer - this.acceptedCharacters.length;
+  //      //this.encodedId = this.acceptedCharacters.length + ((this.relativeDist * (this.relativeDist + 1)) / 2);
+  //      //#FIXME - LGD functionality start
+  //      //
+  //      // I. No virtual index calculation needed, classic LZW behavior.
+  //      //
+  //      if(this.allowedMaxVirtualExtent == 0) {
+  //        this.encodedId = this.positonMatchPointer;
+  //      }
+  //      //
+  //      // II. Might be mixture of the two, depending on the relativeDist value in terms of allowedMaxVirtualExtent.
+  //      //
+  //      if((0 < this.allowedMaxVirtualExtent) && (this.allowedMaxVirtualExtent < this.dictDynSize)) {
+  //        if(this.relativeDist < this.allowedMaxVirtualExtent) {
+  //          this.encodedId = this.acceptedCharacters.length + ((this.relativeDist * (this.relativeDist + 1)) / 2);
+  //        } else {
+  //          this.encodedId = this.acceptedCharacters.length + ((this.allowedMaxVirtualExtent *  (this.allowedMaxVirtualExtent + 1)) / 2) + (this.allowedMaxVirtualExtent * (this.relativeDist - this.allowedMaxVirtualExtent));
+  //        }
+  //      }
+  //      //
+  //      // III. Full virtual index calculation needed; classic VDE behavior.
+  //      //
+  //      if(this.allowedMaxVirtualExtent == this.dictDynSize) {
+  //        this.encodedId = this.acceptedCharacters.length + ((this.relativeDist * (this.relativeDist + 1)) / 2);
+  //      }
+  //      //#FIXME - LGD functionality stop
+  //    }
+  //
+  //  } else {
+  //
+  //    this.relativeDist = this.positonMatchPointer + this.distance - this.acceptedCharacters.length;
+  //    //this.encodedId = this.acceptedCharacters.length +  this.distance + ((this.relativeDist * (this.relativeDist + 1)) / 2);
+  //    //#FIXME - LGD functionality start
+  //    //
+  //    // I. No virtual index calculation needed, classic LZW behavior; in this branch this is the impossible condition.
+  //    //
+  //    // II. Might be mixture of the two, depending on the relativeDist value in terms of allowedMaxVirtualExtent
+  //    //
+  //    if((0 < this.allowedMaxVirtualExtent) && (this.allowedMaxVirtualExtent < this.dictDynSize)) {
+  //      if(this.relativeDist < this.allowedMaxVirtualExtent) {
+  //        this.encodedId = this.acceptedCharacters.length + ((this.relativeDist * (this.relativeDist + 1)) / 2) + this.distance;
+  //      } else {
+  //        this.encodedId = this.acceptedCharacters.length + ((this.allowedMaxVirtualExtent *  (this.allowedMaxVirtualExtent + 1)) / 2) + (this.allowedMaxVirtualExtent * (this.relativeDist - this.allowedMaxVirtualExtent)) + this.distance;
+  //      }
+  //    }
+  //    //
+  //    // III. Full virtual index calculation needed; classic VDE behavior.
+  //    //
+  //    if(this.allowedMaxVirtualExtent == this.dictDynSize) {
+  //      this.encodedId = this.acceptedCharacters.length + ((this.relativeDist * (this.relativeDist + 1)) / 2) +  this.distance;
+  //    }
+  //    //#FIXME - LGD functionality stop
+  //  }
+  //}
 
 
   rearrangeDictionary() {
