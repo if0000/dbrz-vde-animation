@@ -177,6 +177,10 @@ class dbrzVDEPresentationMetrics extends dbrzVDEInterfaceObserver {
         this.dbrzVDEPCCCR.preProcess(arguments[0], arguments[1]);
       }
 
+      if(arguments[0] == "allowedMaxVirtualExtent") {
+        this.dbrzVDEPCCCR.preProcess(arguments[0], arguments[1]);
+      }
+
       if(arguments[0] == "progressCounter") {
 
         this.processedInputSize = arguments[1];
@@ -334,6 +338,7 @@ class dbrzVDEPreprocessorCCCR {
   constructor() {
     this.baseDictSize = 97;
     this.dictSize = 128;
+    this.allowedMaxVirtualExtent = 128;
     this.valueToAdd = 14;
     this.tempProgressCounter = 0;
     this.processedInputSize = 0;
@@ -344,7 +349,13 @@ class dbrzVDEPreprocessorCCCR {
   preProcess(inp1, inp2) {
     if(inp1 == "dictDynSize") {
       this.dictSize = Number(inp2);
-      this.valueToAdd = Math.ceil(Math.log2(this.baseDictSize + (((this.dictSize) * (this.dictSize + 1)) / 2)));
+      //this.valueToAdd = Math.ceil(Math.log2(this.baseDictSize + (((this.dictSize) * (this.dictSize + 1)) / 2)));
+    }
+
+    if(inp1 == "allowedMaxVirtualExtent") {
+      this.allowedMaxVirtualExtent = Number(inp2);
+      let overRange = this.dictSize - this.allowedMaxVirtualExtent;
+      this.valueToAdd = Math.ceil(Math.log2(this.baseDictSize + (((this.allowedMaxVirtualExtent) * (this.allowedMaxVirtualExtent + 1)) / 2) + (overRange * (this.allowedMaxVirtualExtent + 1))));
     }
 
     if(inp1 == "progressCounter") {

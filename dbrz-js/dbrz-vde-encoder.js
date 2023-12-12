@@ -79,7 +79,7 @@ class dbrzVDEEncoder {
     this.checkpointDescription = "00 - Initialized with the given input and settings. To start processing press the play button";
     this.notifySubs(['checkpointDescription']);
 
-    this.notifySubs(['dictDynSize']);
+    this.notifySubs(['dictDynSize', 'allowedMaxVirtualExtent']);
 
     this.encodeController();
   }
@@ -592,72 +592,6 @@ class dbrzVDEEncoder {
   }
 
 
-  //calculateVirtualIndex() {
-  //
-  //  if(this.distance == 0) {
-  //
-  //    if(this.positonMatchPointer < this.acceptedCharacters.length) {
-  //      
-  //      this.encodedId = this.positonMatchPointer;
-  //
-  //    } else {
-  //
-  //      this.relativeDist = this.positonMatchPointer - this.acceptedCharacters.length;
-  //      //this.encodedId = this.acceptedCharacters.length + ((this.relativeDist * (this.relativeDist + 1)) / 2);
-  //      //#FIXME - LGD functionality start
-  //      //
-  //      // I. No virtual index calculation needed, classic LZW behavior.
-  //      //
-  //      if(this.allowedMaxVirtualExtent == 0) {
-  //        this.encodedId = this.positonMatchPointer;
-  //      }
-  //      //
-  //      // II. Might be mixture of the two, depending on the relativeDist value in terms of allowedMaxVirtualExtent.
-  //      //
-  //      if((0 < this.allowedMaxVirtualExtent) && (this.allowedMaxVirtualExtent < this.dictDynSize)) {
-  //        if(this.relativeDist < this.allowedMaxVirtualExtent) {
-  //          this.encodedId = this.acceptedCharacters.length + ((this.relativeDist * (this.relativeDist + 1)) / 2);
-  //        } else {
-  //          this.encodedId = this.acceptedCharacters.length + ((this.allowedMaxVirtualExtent *  (this.allowedMaxVirtualExtent + 1)) / 2) + (this.allowedMaxVirtualExtent * (this.relativeDist - this.allowedMaxVirtualExtent));
-  //        }
-  //      }
-  //      //
-  //      // III. Full virtual index calculation needed; classic VDE behavior.
-  //      //
-  //      if(this.allowedMaxVirtualExtent == this.dictDynSize) {
-  //        this.encodedId = this.acceptedCharacters.length + ((this.relativeDist * (this.relativeDist + 1)) / 2);
-  //      }
-  //      //#FIXME - LGD functionality stop
-  //    }
-  //
-  //  } else {
-  //
-  //    this.relativeDist = this.positonMatchPointer + this.distance - this.acceptedCharacters.length;
-  //    //this.encodedId = this.acceptedCharacters.length +  this.distance + ((this.relativeDist * (this.relativeDist + 1)) / 2);
-  //    //#FIXME - LGD functionality start
-  //    //
-  //    // I. No virtual index calculation needed, classic LZW behavior; in this branch this is the impossible condition.
-  //    //
-  //    // II. Might be mixture of the two, depending on the relativeDist value in terms of allowedMaxVirtualExtent
-  //    //
-  //    if((0 < this.allowedMaxVirtualExtent) && (this.allowedMaxVirtualExtent < this.dictDynSize)) {
-  //      if(this.relativeDist < this.allowedMaxVirtualExtent) {
-  //        this.encodedId = this.acceptedCharacters.length + ((this.relativeDist * (this.relativeDist + 1)) / 2) + this.distance;
-  //      } else {
-  //        this.encodedId = this.acceptedCharacters.length + ((this.allowedMaxVirtualExtent *  (this.allowedMaxVirtualExtent + 1)) / 2) + (this.allowedMaxVirtualExtent * (this.relativeDist - this.allowedMaxVirtualExtent)) + this.distance;
-  //      }
-  //    }
-  //    //
-  //    // III. Full virtual index calculation needed; classic VDE behavior.
-  //    //
-  //    if(this.allowedMaxVirtualExtent == this.dictDynSize) {
-  //      this.encodedId = this.acceptedCharacters.length + ((this.relativeDist * (this.relativeDist + 1)) / 2) +  this.distance;
-  //    }
-  //    //#FIXME - LGD functionality stop
-  //  }
-  //}
-
-
   rearrangeDictionary() {
 
   }
@@ -667,6 +601,7 @@ class dbrzVDEEncoder {
 
     this.listOfObservedValues.set('reset', new Set());
     this.listOfObservedValues.set('dictDynSize', new Set());
+    this.listOfObservedValues.set('allowedMaxVirtualExtent', new Set());
     this.listOfObservedValues.set('checkpointDescription', new Set());
     this.listOfObservedValues.set('progressCounter', new Set());
     this.listOfObservedValues.set('string', new Set());
